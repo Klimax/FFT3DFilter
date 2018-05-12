@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Wiener">
+      <UniqueIdentifier>{7a5f3896-0391-41a0-b564-6ed9d11eb8a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Kalman">
+      <UniqueIdentifier>{cc8d199a-928a-410d-b5fb-e1fef7fafa9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Pattern">
+      <UniqueIdentifier>{95b2ff01-49b3-413e-a7a8-fa6c20ac6ff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sharpen">
+      <UniqueIdentifier>{ddcf96ff-2b0a-47d6-9815-596556ec4eb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Conversions">
+      <UniqueIdentifier>{1114e86b-efca-44db-8d73-316aaca53c06}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FFT3DFilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Conversions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Patterns.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Kalman_AVX.cpp">
+      <Filter>Source Files\Kalman</Filter>
+    </ClCompile>
+    <ClCompile Include="Kalman_AVX2.cpp">
+      <Filter>Source Files\Kalman</Filter>
+    </ClCompile>
+    <ClCompile Include="Kalman_SSE2.cpp">
+      <Filter>Source Files\Kalman</Filter>
+    </ClCompile>
+    <ClCompile Include="Kalman_SSE4.cpp">
+      <Filter>Source Files\Kalman</Filter>
+    </ClCompile>
+    <ClCompile Include="Instrumentation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FilterContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WienerPattern.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sharpen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Kalman.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Kalman_AVX512.cpp">
+      <Filter>Source Files\Kalman</Filter>
+    </ClCompile>
+    <ClCompile Include="Kalman_c.cpp">
+      <Filter>Source Files\Kalman</Filter>
+    </ClCompile>
+    <ClCompile Include="Kalman_SSE.cpp">
+      <Filter>Source Files\Kalman</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDump.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sharpen_avx.cpp">
+      <Filter>Source Files\Sharpen</Filter>
+    </ClCompile>
+    <ClCompile Include="Sharpen_avx2.cpp">
+      <Filter>Source Files\Sharpen</Filter>
+    </ClCompile>
+    <ClCompile Include="Sharpen_avx512.cpp">
+      <Filter>Source Files\Sharpen</Filter>
+    </ClCompile>
+    <ClCompile Include="Sharpen_c.cpp">
+      <Filter>Source Files\Sharpen</Filter>
+    </ClCompile>
+    <ClCompile Include="Sharpen_sse.cpp">
+      <Filter>Source Files\Sharpen</Filter>
+    </ClCompile>
+    <ClCompile Include="Sharpen_sse2.cpp">
+      <Filter>Source Files\Sharpen</Filter>
+    </ClCompile>
+    <ClCompile Include="Sharpen_sse3.cpp">
+      <Filter>Source Files\Sharpen</Filter>
+    </ClCompile>
+    <ClCompile Include="Conversions_c.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Conversions-avx.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Conversions-avx2.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Conversions-avx512.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Conversions-sse.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Conversions-sse2.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Conversions-sse4.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Init_c.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Init-avx.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Init-avx2.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Init-avx512.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Init-sse.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Init-sse2.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Init-sse4.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Init-ssse3.cpp">
+      <Filter>Source Files\Conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_avx.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_avx2.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_avx512.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_c.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_sse.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_sse2.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_sse3.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_avx.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_avx2.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_avx512.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_c.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_sse.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_sse2.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_sse3.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="avisynth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fftwlite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="info.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fft3dfilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Wiener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Instrumentation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FilterContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WienerPattern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sharpen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Kalman.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDump.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

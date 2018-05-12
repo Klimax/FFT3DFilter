@@ -136,7 +136,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-SSE2|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
@@ -215,53 +215,43 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\Klimax-compiled\FFT3DFilter\$(Configuration)\</OutDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <EnableCppCoreCheck>true</EnableCppCoreCheck>
     <EnableExperimentalCppCoreCheck>true</EnableExperimentalCppCoreCheck>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-measurment|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\Klimax-compiled\FFT3DFilter\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)-measurment</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Atom|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\Klimax-compiled\FFT3DFilter\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)-atom</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Atom-measuring|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\Klimax-compiled\FFT3DFilter\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)-atom-measurement</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\Klimax-compiled\FFT3DFilter\$(Configuration)-x64\</OutDir>
     <TargetName>$(ProjectName)64</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-measurment|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\Klimax-compiled\FFT3DFilter\$(Configuration)-x64\</OutDir>
     <TargetName>$(ProjectName)64</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Atom|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\Klimax-compiled\FFT3DFilter\$(Configuration)-x64\</OutDir>
     <TargetName>$(ProjectName)64</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-Atom-measuring|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\Klimax-compiled\FFT3DFilter\$(Configuration)-x64\</OutDir>
     <TargetName>$(ProjectName)64</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-SSE2|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\Klimax-compiled\FFT3DFilter\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-SSE2|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\..\..\Klimax-compiled\FFT3DFilter\$(Configuration)-x64\</OutDir>
     <TargetName>$(ProjectName)64</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_11|Win32'">
@@ -309,12 +299,10 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;FFT3DFILTER_EXPORTS;AVS_LINKAGE_DLLIMPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <StructMemberAlignment>Default</StructMemberAlignment>
-      <AssemblerListingLocation>./asm/</AssemblerListingLocation>
       <SDLCheck>false</SDLCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
       <DisableSpecificWarnings>26481; 26493 ; 26499 ; 26485; 26429;26412;26413</DisableSpecificWarnings>
@@ -348,8 +336,6 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <AssemblerListingLocation>
-      </AssemblerListingLocation>
       <SDLCheck>false</SDLCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
       <DisableSpecificWarnings>
@@ -377,16 +363,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>SSE2BUILD;FFTW_ATOM;WIN32;NDEBUG;_WINDOWS;_USRDLL;FFT3DFILTER_EXPORTS;AVS_LINKAGE_DLLIMPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <UseUnicodeForAssemblerListing>false</UseUnicodeForAssemblerListing>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalOptions>/favor:ATOM %(AdditionalOptions)</AdditionalOptions>
-      <AssemblerListingLocation>./asm/</AssemblerListingLocation>
       <SDLCheck>false</SDLCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
       <DisableSpecificWarnings>
@@ -421,8 +404,6 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalOptions>/favor:ATOM %(AdditionalOptions)</AdditionalOptions>
-      <AssemblerListingLocation>
-      </AssemblerListingLocation>
       <SDLCheck>false</SDLCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
       <DisableSpecificWarnings>
@@ -450,9 +431,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>SSE2BUILD;AVS_LINKAGE_DLLIMPORT;AVISYNTH64;NDEBUG;_WINDOWS;_USRDLL;FFT3DFILTER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -460,7 +439,6 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointModel>Fast</FloatingPointModel>
       <OmitFramePointers>false</OmitFramePointers>
-      <AssemblerListingLocation>./asm/</AssemblerListingLocation>
       <SDLCheck>false</SDLCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
@@ -483,9 +461,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>SSE2BUILD;AVS_LINKAGE_DLLIMPORT;AVISYNTH64;NDEBUG;_WINDOWS;_USRDLL;FFT3DFILTER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -493,7 +469,6 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointModel>Fast</FloatingPointModel>
       <OmitFramePointers>false</OmitFramePointers>
-      <AssemblerListingLocation>./asm/</AssemblerListingLocation>
       <SDLCheck>false</SDLCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
@@ -516,9 +491,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>SSE2BUILD;AVS_LINKAGE_DLLIMPORT;AVISYNTH64;NDEBUG;_WINDOWS;_USRDLL;FFT3DFILTER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -526,7 +499,6 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointModel>Fast</FloatingPointModel>
       <OmitFramePointers>false</OmitFramePointers>
-      <AssemblerListingLocation>./asm/</AssemblerListingLocation>
       <SDLCheck>false</SDLCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
@@ -549,9 +521,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>SSE2BUILD;AVS_LINKAGE_DLLIMPORT;AVISYNTH64;NDEBUG;_WINDOWS;_USRDLL;FFT3DFILTER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -559,7 +529,6 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointModel>Fast</FloatingPointModel>
       <OmitFramePointers>false</OmitFramePointers>
-      <AssemblerListingLocation>./asm/</AssemblerListingLocation>
       <SDLCheck>false</SDLCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
@@ -583,7 +552,6 @@
       <PreprocessorDefinitions>AVS_LINKAGE_DLLIMPORT;WIN32;NDEBUG;_WINDOWS;_USRDLL;FFT3DFILTER_EXPORTS;SSE2BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -591,7 +559,6 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointModel>Fast</FloatingPointModel>
       <OmitFramePointers>false</OmitFramePointers>
-      <AssemblerListingLocation>./asm/</AssemblerListingLocation>
       <SDLCheck>false</SDLCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -615,9 +582,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>SSE2BUILD;AVS_LINKAGE_DLLIMPORT;AVISYNTH64;NDEBUG;_WINDOWS;_USRDLL;FFT3DFILTER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <UseUnicodeForAssemblerListing>true</UseUnicodeForAssemblerListing>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
       <StringPooling>true</StringPooling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -625,7 +590,6 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointModel>Fast</FloatingPointModel>
       <OmitFramePointers>false</OmitFramePointers>
-      <AssemblerListingLocation>./asm/</AssemblerListingLocation>
       <SDLCheck>false</SDLCheck>
       <ControlFlowGuard>false</ControlFlowGuard>
     </ClCompile>
