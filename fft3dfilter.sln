@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fft3dfilter", "fft3dfilter.vcxproj", "{8EB9F1DA-B19E-4497-8A1D-4627DF502715}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+		Release-Atom|Win32 = Release-Atom|Win32
+		Release-Atom|x64 = Release-Atom|x64
+		Release-Atom-measuring|Win32 = Release-Atom-measuring|Win32
+		Release-Atom-measuring|x64 = Release-Atom-measuring|x64
+		Release-measurment|Win32 = Release-measurment|Win32
+		Release-measurment|x64 = Release-measurment|x64
+		Release-SSE2|Win32 = Release-SSE2|Win32
+		Release-SSE2|x64 = Release-SSE2|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Debug|Win32.Build.0 = Debug|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Debug|x64.ActiveCfg = Debug|x64
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Debug|x64.Build.0 = Debug|x64
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release|Win32.ActiveCfg = Release|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release|Win32.Build.0 = Release|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release|x64.ActiveCfg = Release|x64
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release|x64.Build.0 = Release|x64
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-Atom|Win32.ActiveCfg = Release-Atom|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-Atom|Win32.Build.0 = Release-Atom|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-Atom|x64.ActiveCfg = Release-Atom|x64
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-Atom|x64.Build.0 = Release-Atom|x64
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-Atom-measuring|Win32.ActiveCfg = Release-Atom-measuring|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-Atom-measuring|Win32.Build.0 = Release-Atom-measuring|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-Atom-measuring|x64.ActiveCfg = Release-Atom-measuring|x64
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-Atom-measuring|x64.Build.0 = Release-Atom-measuring|x64
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-measurment|Win32.ActiveCfg = Release-measurment|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-measurment|Win32.Build.0 = Release-measurment|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-measurment|x64.ActiveCfg = Release-measurment|x64
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-measurment|x64.Build.0 = Release-measurment|x64
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-SSE2|Win32.ActiveCfg = Release-SSE2|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-SSE2|Win32.Build.0 = Release-SSE2|Win32
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-SSE2|x64.ActiveCfg = Release-SSE2|x64
+		{8EB9F1DA-B19E-4497-8A1D-4627DF502715}.Release-SSE2|x64.Build.0 = Release-SSE2|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3B8F695-85C9-4439-B80A-2831A17E1580}
+	EndGlobalSection
+EndGlobal
