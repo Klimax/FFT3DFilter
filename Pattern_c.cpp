@@ -59,7 +59,7 @@ void PatternFilter::ApplyPattern2D_degrid_C() noexcept
 	float psd(0.0f), WienerFactor(0.0f);
 	for (int block = start_block; block < blocks; block++)
 	{
-		float gridfraction = degrid * outcur[0][0] / gridsample[0][0];
+		const float gridfraction = degrid * outcur[0][0] / gridsample[0][0];
 		float *pattern2d = pattern3d;
 		for (int h = 0; h < bh; h++) // middle
 		{
@@ -184,12 +184,12 @@ void PatternFilter::ApplyPattern3D3_C() noexcept
 			for (int w = 0; w < outwidth; w++) // 
 			{
 				// dft 3d (very short - 3 points)
-				float pnr = outprev[w][0] + outnext[w][0];
-				float pni = outprev[w][1] + outnext[w][1];
+				const float pnr = outprev[w][0] + outnext[w][0];
+				const float pni = outprev[w][1] + outnext[w][1];
 				fcr = outcur[w][0] + pnr; // real cur
 				fci = outcur[w][1] + pni; // im cur
-				float di = sin120 * (outprev[w][1] - outnext[w][1]);
-				float dr = sin120 * (outnext[w][0] - outprev[w][0]);
+				const float di = sin120 * (outprev[w][1] - outnext[w][1]);
+				const float dr = sin120 * (outnext[w][0] - outprev[w][0]);
 				fpr = outcur[w][0] - 0.5f*pnr + di; // real prev
 				fnr = outcur[w][0] - 0.5f*pnr - di; // real next
 				fpi = outcur[w][1] - 0.5f*pni + dr; // im prev
@@ -238,14 +238,14 @@ void PatternFilter::ApplyPattern3D3_degrid_C() noexcept
 				float gridcorrection0_3 = gridfraction * gridsample[w][0] * 3;
 				float gridcorrection1_3 = gridfraction * gridsample[w][1] * 3;
 				// dft 3d (very short - 3 points)
-				float pnr = outprev[w][0] + outnext[w][0];
-				float pni = outprev[w][1] + outnext[w][1];
+				const float pnr = outprev[w][0] + outnext[w][0];
+				const float pni = outprev[w][1] + outnext[w][1];
 				fcr = outcur[w][0] + pnr; // real cur
 				fcr -= gridcorrection0_3;
 				fci = outcur[w][1] + pni; // im cur
 				fci -= gridcorrection1_3;
-				float di = sin120 * (outprev[w][1] - outnext[w][1]);
-				float dr = sin120 * (outnext[w][0] - outprev[w][0]);
+				const float di = sin120 * (outprev[w][1] - outnext[w][1]);
+				const float dr = sin120 * (outnext[w][0] - outprev[w][0]);
 				fpr = outcur[w][0] - 0.5f*pnr + di; // real prev
 				fnr = outcur[w][0] - 0.5f*pnr - di; // real next
 				fpi = outcur[w][1] - 0.5f*pni + dr; // im prev
@@ -493,7 +493,7 @@ void PatternFilter::ApplyPattern3D5_degrid_C() noexcept
 
 	for (int block = start_block; block < blocks; block++)
 	{
-		float gridfraction = degrid * outcur[0][0] / gridsample[0][0];
+		const float gridfraction = degrid * outcur[0][0] / gridsample[0][0];
 		for (int h = 0; h < bh; h++) // first half
 		{
 			for (int w = 0; w < outwidth; w++) // 
@@ -576,15 +576,15 @@ void FindPatternBlock_C(fftwf_complex *outcur0, int outwidth, int outpitch, int 
 		{
 			outcur = outcur0 + nox * by*bh*outpitch + bx * bh*outpitch;
 			sigmaSquaredcur = 0;
-			float gcur = degrid * outcur[0][0] / gridsample[0][0]; // grid (windowing) correction factor
+			const float gcur = degrid * outcur[0][0] / gridsample[0][0]; // grid (windowing) correction factor
 			for (int h = 0; h < bh; h++)
 			{
 				for (int w = 0; w < outwidth; w++)
 				{
-					float grid0 = gcur * gridsample[w][0];
-					float grid1 = gcur * gridsample[w][1];
-					float corrected0 = outcur[w][0] - grid0;
-					float corrected1 = outcur[w][1] - grid1;
+					const float grid0 = gcur * gridsample[w][0];
+					const float grid1 = gcur * gridsample[w][1];
+					const float corrected0 = outcur[w][0] - grid0;
+					const float corrected1 = outcur[w][1] - grid1;
 					psd = corrected0 * corrected0 + corrected1 * corrected1;
 					sigmaSquaredcur += psd * pwin[w]; // windowing
 				}
@@ -639,10 +639,10 @@ void SetPattern_C(fftwf_complex *outcur, int outwidth, int outpitch, int bh, int
 	{
 		for (int w = 0; w < outwidth; w++)
 		{
-			float grid0 = gcur * gridsample[w][0];
-			float grid1 = gcur * gridsample[w][1];
-			float corrected0 = outcur[w][0] - grid0;
-			float corrected1 = outcur[w][1] - grid1;
+			const float grid0 = gcur * gridsample[w][0];
+			const float grid1 = gcur * gridsample[w][1];
+			const float corrected0 = outcur[w][0] - grid0;
+			const float corrected1 = outcur[w][1] - grid1;
 			psd = corrected0 * corrected0 + corrected1 * corrected1;
 			//			psd = outcur[w][0]*outcur[w][0] + outcur[w][1]*outcur[w][1];
 			pattern2d[w] = psd * pwin[w]; // windowing

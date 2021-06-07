@@ -53,7 +53,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 			__m256 input = _mm256_load_ps(&inp[0]);
 			for (w = 0; w < dbwow8; w = w + 8)   // first half line of first block
 			{   // Copy each byte from float array to dest with windows
-				__m256 r1 = _mm256_mul_ps(input, norm8);
+				const __m256 r1 = _mm256_mul_ps(input, norm8);
 				__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
 				r1i = _mm256_packus_epi32(r1i, _mm256_setzero_si256());
 				r1i = _mm256_packus_epi16(r1i, _mm256_setzero_si256());
@@ -72,7 +72,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 				for (w = 0; w < ow8; w = w + 8)   // half line of block
 				{
 					__m256 r1 = _mm256_mul_ps(input, _mm256_load_ps(&wsynxr[w]));
-					__m256 r3 = _mm256_mul_ps(_mm256_load_ps(&inp[w + xoffset]), _mm256_load_ps(&wsynxl[w]));
+					const __m256 r3 = _mm256_mul_ps(_mm256_load_ps(&inp[w + xoffset]), _mm256_load_ps(&wsynxl[w]));
 					r1 = _mm256_add_ps(r1, r3);
 					r1 = _mm256_mul_ps(r1, norm8);
 					__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
@@ -90,7 +90,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 
 				for (w = 0; w < d2bwow8; w = w + 8)   // last half line of last block
 				{
-					__m256 r1 = _mm256_mul_ps(_mm256_load_ps(&inp[w]), norm8);
+					const __m256 r1 = _mm256_mul_ps(_mm256_load_ps(&inp[w]), norm8);
 					__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
 					r1i = _mm256_packus_epi32(r1i, _mm256_setzero_si256());
 					r1i = _mm256_packus_epi16(r1i, _mm256_setzero_si256());
@@ -107,7 +107,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 			input = _mm256_load_ps(&inp[0]);
 			for (w = 0; w < ow8; w = w + 8)   // first half line of first block
 			{   // Copy each byte from float array to dest with windows
-				__m256 r1 = _mm256_mul_ps(input, norm8);
+				const __m256 r1 = _mm256_mul_ps(input, norm8);
 				__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
 				r1i = _mm256_packus_epi32(r1i, _mm256_setzero_si256());
 				r1i = _mm256_packus_epi16(r1i, _mm256_setzero_si256());
@@ -140,7 +140,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 			for (w = 0; w < dbwow8; w = w + 8)   // first half line of first block
 			{
 				__m256 r1 = _mm256_mul_ps(input, wsynyrh8);
-				__m256 r3 = _mm256_mul_ps(_mm256_load_ps(&inp[w + yoffset]), wsynylh8);
+				const __m256 r3 = _mm256_mul_ps(_mm256_load_ps(&inp[w + yoffset]), wsynylh8);
 				r1 = _mm256_add_ps(r1, r3);
 				__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
 				r1i = _mm256_packus_epi32(r1i, _mm256_setzero_si256());
@@ -159,9 +159,9 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 				for (w = 0; w < ow4; w = w + 4)   // half overlapped line of block ; AVX processing fo some reason fails
 				{
 					__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), _mm_load_ps(&wsynxr[w]));
-					__m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
+					const __m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
 					__m128 r6 = _mm_mul_ps(_mm_load_ps(&inp[w + yoffset]), _mm_load_ps(&wsynxr[w]));
-					__m128 r8 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset + yoffset]), _mm_load_ps(&wsynxl[w]));
+					const __m128 r8 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset + yoffset]), _mm_load_ps(&wsynxl[w]));
 					r1 = _mm_add_ps(r1, r3);
 					r6 = _mm_add_ps(r6, r8);
 					r1 = _mm_mul_ps(r1, wsynyrh4);
@@ -171,7 +171,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 					__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 					r1i = _mm_packus_epi32(r1i, _mm_setzero_si128());
 					r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-					int out_t = _mm_cvtsi128_si32(r1i);
+					const int out_t = _mm_cvtsi128_si32(r1i);
 					memcpy(&dstp[w], &out_t, 4);
 				}
 				for (; w < ow; w++)   // half overlapped line of block
@@ -185,7 +185,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 				for (w = 0; w < d2bwow8; w = w + 8)   // last half line of last block
 				{
 					__m256 r1 = _mm256_mul_ps(_mm256_load_ps(&inp[w]), wsynyrh8);
-					__m256 r2 = _mm256_mul_ps(_mm256_load_ps(&inp[w + yoffset]), wsynylh8);
+					const __m256 r2 = _mm256_mul_ps(_mm256_load_ps(&inp[w + yoffset]), wsynylh8);
 					r1 = _mm256_add_ps(r1, r2);
 					__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
 					r1i = _mm256_packus_epi32(r1i, _mm256_setzero_si256());
@@ -204,7 +204,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 			for (w = 0; w < ow8; w = w + 8)   // last half line of last block
 			{
 				__m256 r1 = _mm256_mul_ps(input, wsynyrh8);
-				__m256 r3 = _mm256_mul_ps(_mm256_load_ps(&inp[w + yoffset]), wsynylh8);
+				const __m256 r3 = _mm256_mul_ps(_mm256_load_ps(&inp[w + yoffset]), wsynylh8);
 				r1 = _mm256_add_ps(r1, r3);
 				__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
 				r1i = _mm256_packus_epi32(r1i, _mm256_setzero_si256());
@@ -237,7 +237,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 				for (w = 0; w < ow8; w = w + 8)   // half line of block
 				{
 					__m256 r1 = _mm256_mul_ps(input, _mm256_load_ps(&wsynxr[w]));
-					__m256 r3 = _mm256_mul_ps(_mm256_load_ps(&inp[w + xoffset]), _mm256_load_ps(&wsynxl[w]));
+					const __m256 r3 = _mm256_mul_ps(_mm256_load_ps(&inp[w + xoffset]), _mm256_load_ps(&wsynxl[w]));
 					r1 = _mm256_add_ps(r1, r3);
 					r1 = _mm256_mul_ps(r1, norm8);
 					__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
@@ -255,7 +255,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 
 				for (w = 0; w < d2bwow8; w = w + 8)   // last half line of last block
 				{
-					__m256 r1 = _mm256_mul_ps(_mm256_load_ps(&inp[w]), norm8);
+					const __m256 r1 = _mm256_mul_ps(_mm256_load_ps(&inp[w]), norm8);
 					__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
 					r1i = _mm256_packus_epi32(r1i, _mm256_setzero_si256());
 					r1i = _mm256_packus_epi16(r1i, _mm256_setzero_si256());
@@ -272,7 +272,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 			__m256 input = _mm256_load_ps(&inp[0]);
 			for (w = 0; w < ow8; w = w + 8)   // first half line of first block
 			{   // Copy each byte from float array to dest with windows
-				__m256 r1 = _mm256_mul_ps(input, norm8);
+				const __m256 r1 = _mm256_mul_ps(input, norm8);
 				__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
 				r1i = _mm256_packus_epi32(r1i, _mm256_setzero_si256());
 				r1i = _mm256_packus_epi16(r1i, _mm256_setzero_si256());
@@ -299,7 +299,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 			__m256 input = _mm256_load_ps(&inp[0]);
 			for (w = 0; w < dbwow8; w = w + 8)   // first half line of first block
 			{   // Copy each byte from float array to dest with windows
-				__m256 r1 = _mm256_mul_ps(input, norm8);
+				const __m256 r1 = _mm256_mul_ps(input, norm8);
 				__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
 				r1i = _mm256_packus_epi32(r1i, _mm256_setzero_si256());
 				r1i = _mm256_packus_epi16(r1i, _mm256_setzero_si256());
@@ -318,7 +318,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 				for (w = 0; w < ow8; w = w + 8)   // half line of block
 				{
 					__m256 r1 = _mm256_mul_ps(input, _mm256_load_ps(&wsynxr[w]));
-					__m256 r3 = _mm256_mul_ps(_mm256_load_ps(&inp[w + xoffset]), _mm256_load_ps(&wsynxl[w]));
+					const __m256 r3 = _mm256_mul_ps(_mm256_load_ps(&inp[w + xoffset]), _mm256_load_ps(&wsynxl[w]));
 					r1 = _mm256_add_ps(r1, r3);
 					r1 = _mm256_mul_ps(r1, norm8);
 					__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
@@ -336,7 +336,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 
 				for (w = 0; w < d2bwow8; w = w + 8)   // last half line of last block
 				{
-					__m256 r1 = _mm256_mul_ps(_mm256_load_ps(&inp[w]), norm8);
+					const __m256 r1 = _mm256_mul_ps(_mm256_load_ps(&inp[w]), norm8);
 					__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
 					r1i = _mm256_packus_epi32(r1i, _mm256_setzero_si256());
 					r1i = _mm256_packus_epi16(r1i, _mm256_setzero_si256());
@@ -353,7 +353,7 @@ void FFT3DFilter::DecodeOverlapPlane_AVX2(const float *__restrict inp0, BYTE *__
 			input = _mm256_load_ps(&inp[0]);
 			for (w = 0; w < ow8; w = w + 8)   // first half line of first block
 			{   // Copy each byte from float array to dest with windows
-				__m256 r1 = _mm256_mul_ps(input, norm8);
+				const __m256 r1 = _mm256_mul_ps(input, norm8);
 				__m256i r1i = _mm256_add_epi32(_mm256_cvtps_epi32(r1), planebase8);
 				r1i = _mm256_packus_epi32(r1i, _mm256_setzero_si256());
 				r1i = _mm256_packus_epi16(r1i, _mm256_setzero_si256());

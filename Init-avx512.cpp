@@ -43,8 +43,8 @@ void FFT3DFilter::InitOverlapPlane_AVX512(float *__restrict inp0, const BYTE *__
 		for (int h = 0; h < oh; h++)
 		{
 			inp = inp0 + h * bw;
-			float wanyl_ = wanyl[h];
-			__m512 wanyl16 = _mm512_set1_ps(wanyl_);
+			const float wanyl_ = wanyl[h];
+			const __m512 wanyl16 = _mm512_set1_ps(wanyl_);
 			for (w = 0; w < ow16; w = w + 16)   // left part  (non-overlapped) row of first block
 			{
 				__m512i r1i = _mm512_cvtepu8_epi32(_mm_load_si128((__m128i*)&srcp[w]));
@@ -161,7 +161,7 @@ void FFT3DFilter::InitOverlapPlane_AVX512(float *__restrict inp0, const BYTE *__
 				{
 					__m512i r1i = _mm512_cvtepu8_epi32(_mm_load_si128((__m128i*)&srcp[w]));
 					r1i = _mm512_sub_epi32(r1i, planebase16);
-					__m512 r1 = _mm512_cvtepi32_ps(r1i);
+					const __m512 r1 = _mm512_cvtepi32_ps(r1i);
 					_mm512_store_ps(&inp[w], _mm512_mul_ps(r1, _mm512_load_ps(&wanxr[w])));
 					_mm512_store_ps(&inp[w + xoffset], _mm512_mul_ps(r1, _mm512_load_ps(&wanxl[w])));
 				}
@@ -213,13 +213,13 @@ void FFT3DFilter::InitOverlapPlane_AVX512(float *__restrict inp0, const BYTE *__
 		for (int h = 0; h < oh; h++) // top overlapped part
 		{
 			inp = inp0 + (ihy - 1)*(yoffset + (bh - oh)*bw) + (bh - oh)*bw + h * bw;
-			float wanyl_ = wanyl[h];
-			float wanyr_ = wanyr[h];
-			__m128 wanyl4 = _mm_set1_ps(wanyl_);
-			__m512 wanyl16 = _mm512_set1_ps(wanyl_);
+			const float wanyl_ = wanyl[h];
+			const float wanyr_ = wanyr[h];
+			const __m128 wanyl4 = _mm_set1_ps(wanyl_);
+			const __m512 wanyl16 = _mm512_set1_ps(wanyl_);
 
-			__m128 wanyr4 = _mm_set1_ps(wanyr_);
-			__m512 wanyr16 = _mm512_set1_ps(wanyr_);
+			const __m128 wanyr4 = _mm_set1_ps(wanyr_);
+			const __m512 wanyr16 = _mm512_set1_ps(wanyr_);
 
 			for (w = 0; w < ow16; w = w + 16)   // left part  (non-overlapped) row of first block
 			{
@@ -241,7 +241,7 @@ void FFT3DFilter::InitOverlapPlane_AVX512(float *__restrict inp0, const BYTE *__
 			{
 				__m512i r1i = _mm512_cvtepu8_epi32(_mm_load_si128((__m128i*)&srcp[w]));
 				r1i = _mm512_sub_epi32(r1i, planebase16);
-				__m512 r1 = _mm512_cvtepi32_ps(r1i);
+				const __m512 r1 = _mm512_cvtepi32_ps(r1i);
 				_mm512_store_ps(&inp[w], _mm512_mul_ps(r1, wanyr16));
 				_mm512_store_ps(&inp[w + yoffset], _mm512_mul_ps(r1, wanyl16));
 			}
@@ -262,7 +262,7 @@ void FFT3DFilter::InitOverlapPlane_AVX512(float *__restrict inp0, const BYTE *__
 					__m128i r1i = _mm_cvtsi32_si128(in_t);
 					r1i = _mm_cvtepu8_epi32(r1i);
 					r1i = _mm_sub_epi32(r1i, planebase4);
-					__m128 r1 = _mm_cvtepi32_ps(r1i);
+					const __m128 r1 = _mm_cvtepi32_ps(r1i);
 
 					__m128 r2 = _mm_mul_ps(r1, wanyr4);
 					r2 = _mm_mul_ps(r2, _mm_load_ps(&wanxr[w]));
@@ -297,7 +297,7 @@ void FFT3DFilter::InitOverlapPlane_AVX512(float *__restrict inp0, const BYTE *__
 				{
 					__m512i r1i = _mm512_cvtepu8_epi32(_mm_load_si128((__m128i*)&srcp[w]));
 					r1i = _mm512_sub_epi32(r1i, planebase16);
-					__m512 r1 = _mm512_cvtepi32_ps(r1i);
+					const __m512 r1 = _mm512_cvtepi32_ps(r1i);
 					_mm512_store_ps(&inp[w], _mm512_mul_ps(r1, wanyr16));
 					_mm512_store_ps(&inp[w + yoffset], _mm512_mul_ps(r1, wanyl16));
 				}
@@ -365,7 +365,7 @@ void FFT3DFilter::InitOverlapPlane_AVX512(float *__restrict inp0, const BYTE *__
 				{
 					__m512i r1i = _mm512_cvtepu8_epi32(_mm_load_si128((__m128i*)&srcp[w]));
 					r1i = _mm512_sub_epi32(r1i, planebase16);
-					__m512 r1 = _mm512_cvtepi32_ps(r1i);
+					const __m512 r1 = _mm512_cvtepi32_ps(r1i);
 					_mm512_store_ps(&inp[w], _mm512_mul_ps(r1, _mm512_load_ps(&wanxr[w])));
 					_mm512_store_ps(&inp[w + xoffset], _mm512_mul_ps(r1, _mm512_load_ps(&wanxl[w])));
 				}
@@ -417,8 +417,8 @@ void FFT3DFilter::InitOverlapPlane_AVX512(float *__restrict inp0, const BYTE *__
 		for (int h = 0; h < oh; h++)
 		{
 			inp = inp0 + (ihy - 1)*(yoffset + (bh - oh)*bw) + (bh - oh)*bw + h * bw;
-			float wanyr_ = wanyr[h];
-			__m512 wanyr16 = _mm512_set1_ps(wanyr_);
+			const float wanyr_ = wanyr[h];
+			const __m512 wanyr16 = _mm512_set1_ps(wanyr_);
 
 			for (w = 0; w < ow16; w = w + 16)   // left part  (non-overlapped) row of first block
 			{
@@ -473,7 +473,7 @@ void FFT3DFilter::InitOverlapPlane_AVX512(float *__restrict inp0, const BYTE *__
 				{
 					__m512i r1i = _mm512_cvtepu8_epi32(_mm_load_si128((__m128i*)&srcp[w]));
 					r1i = _mm512_sub_epi32(r1i, planebase16);
-					__m512 r1 = _mm512_cvtepi32_ps(r1i);
+					const __m512 r1 = _mm512_cvtepi32_ps(r1i);
 					_mm512_store_ps(&inp[w], _mm512_mul_ps(r1, wanyr16));
 				}
 				for (; w < d2bwow; w++)   // center part  (non-overlapped) row of first block
@@ -576,7 +576,7 @@ void FFT3DFilter::InitOverlapPlane_wt2_AVX512(float *__restrict inp0, const BYTE
 				{
 					__m512i r1i = _mm512_cvtepu8_epi32(_mm_load_si128((__m128i*)&srcp[w]));
 					r1i = _mm512_sub_epi32(r1i, planebase16);
-					__m512 r1 = _mm512_cvtepi32_ps(r1i);
+					const __m512 r1 = _mm512_cvtepi32_ps(r1i);
 					_mm512_store_ps(&inp[w], r1);
 				}
 				for (; w < d2bwow; w++)   // center part  (non-overlapped) row of first block
@@ -649,7 +649,7 @@ void FFT3DFilter::InitOverlapPlane_wt2_AVX512(float *__restrict inp0, const BYTE
 				{
 					__m512i r1i = _mm512_cvtepu8_epi32(_mm_load_si128((__m128i*)&srcp[w]));
 					r1i = _mm512_sub_epi32(r1i, planebase16);
-					__m512 r1 = _mm512_cvtepi32_ps(r1i);
+					const __m512 r1 = _mm512_cvtepi32_ps(r1i);
 					_mm512_store_ps(&inp[w], r1);
 				}
 				for (; w < d2bwow; w++)   // center part  (non-overlapped) row of first block
@@ -738,7 +738,7 @@ void FFT3DFilter::InitOverlapPlane_wt2_AVX512(float *__restrict inp0, const BYTE
 				{
 					__m512i r1i = _mm512_cvtepu8_epi32(_mm_load_si128((__m128i*)&srcp[w]));
 					r1i = _mm512_sub_epi32(r1i, planebase16);
-					__m512 r1 = _mm512_cvtepi32_ps(r1i);
+					const __m512 r1 = _mm512_cvtepi32_ps(r1i);
 					_mm512_store_ps(&inp[w], r1);
 					_mm512_store_ps(&inp[w + yoffset], r1);
 				}
@@ -820,7 +820,7 @@ void FFT3DFilter::InitOverlapPlane_wt2_AVX512(float *__restrict inp0, const BYTE
 				{
 					__m512i r1i = _mm512_cvtepu8_epi32(_mm_load_si128((__m128i*)&srcp[w]));
 					r1i = _mm512_sub_epi32(r1i, planebase16);
-					__m512 r1 = _mm512_cvtepi32_ps(r1i);
+					const __m512 r1 = _mm512_cvtepi32_ps(r1i);
 					_mm512_store_ps(&inp[w], r1);
 				}
 				for (; w < d2bwow; w++)   // half non-overlapped line of block
@@ -900,7 +900,7 @@ void FFT3DFilter::InitOverlapPlane_wt2_AVX512(float *__restrict inp0, const BYTE
 				{
 					__m512i r1i = _mm512_cvtepu8_epi32(_mm_load_si128((__m128i*)&srcp[w]));
 					r1i = _mm512_sub_epi32(r1i, planebase16);
-					__m512 r1 = _mm512_cvtepi32_ps(r1i);
+					const __m512 r1 = _mm512_cvtepi32_ps(r1i);
 					_mm512_store_ps(&inp[w], r1);
 				}
 				for (; w < d2bwow; w++)   // center part  (non-overlapped) row of first block

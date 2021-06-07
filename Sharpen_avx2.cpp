@@ -42,14 +42,14 @@ void SharpenFilter::Sharpen_AVX2() noexcept
 			{
 				for (int w = 0; w < outwidth; w = w + 4)
 				{
-					__m256 cur = _mm256_load_ps(outcur[w]);
-					__m256 r1 = _mm256_mul_ps(cur, cur);
-					__m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, psd2, psd3, psd4,psd1,...
+					const __m256 cur = _mm256_load_ps(outcur[w]);
+					const __m256 r1 = _mm256_mul_ps(cur, cur);
+					const __m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, psd2, psd3, psd4,psd1,...
 
 					__m256 r2 = _mm256_mul_ps(sharpen8, _mm256_broadcast_ps((__m128*)&wsharpen[w]));
 					__m256 r3 = _mm256_mul_ps(psd4, sigmaSquaredSharpenMax8);
 					__m256 r4 = _mm256_add_ps(psd4, sigmaSquaredSharpenMin8);
-					__m256 r5 = _mm256_add_ps(psd4, sigmaSquaredSharpenMax8);
+					const __m256 r5 = _mm256_add_ps(psd4, sigmaSquaredSharpenMax8);
 					r4 = _mm256_mul_ps(r4, r5);
 					r3 = _mm256_div_ps(r3, r4);
 					r3 = _mm256_sqrt_ps(r3);
@@ -78,16 +78,16 @@ void SharpenFilter::Sharpen_AVX2() noexcept
 			{
 				for (int w = 0; w < outwidth; w = w + 4)
 				{
-					__m256 cur = _mm256_load_ps(outcur[w]);
-					__m256 r1 = _mm256_mul_ps(cur, cur);
-					__m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, -, psd2, -
+					const __m256 cur = _mm256_load_ps(outcur[w]);
+					const __m256 r1 = _mm256_mul_ps(cur, cur);
+					const __m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, -, psd2, -
 
 					__m256 r3 = _mm256_add_ps(psd4, ht2n8);
 					__m256 r4 = _mm256_mul_ps(psd4, dehalo8);
 					r4 = _mm256_fmadd_ps(r4, _mm256_broadcast_ps((__m128*)&wdehalo[w]), r3);
 					r3 = _mm256_div_ps(r3, r4);
 
-					__m256 r2 = _mm256_permutevar_ps(r3, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0));
+					const __m256 r2 = _mm256_permutevar_ps(r3, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0));
 					_mm256_store_ps(outcur[w], _mm256_mul_ps(r2, cur));
 				}
 				_mm_prefetch((const char*)(outcur + outpitch), _MM_HINT_T0);
@@ -114,15 +114,15 @@ void SharpenFilter::Sharpen_AVX2() noexcept
 			{
 				for (int w = 0; w < outwidth; w = w + 4)
 				{
-					__m256 cur = _mm256_load_ps(outcur[w]);
-					__m256 r1 = _mm256_mul_ps(cur, cur);
-					__m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, -, psd2, -
+					const __m256 cur = _mm256_load_ps(outcur[w]);
+					const __m256 r1 = _mm256_mul_ps(cur, cur);
+					const __m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, -, psd2, -
 
-					__m256 sharp4 = _mm256_broadcast_ps((__m128*) &wsharpen[w]);
+					const __m256 sharp4 = _mm256_broadcast_ps((__m128*) &wsharpen[w]);
 					__m256 r2 = _mm256_mul_ps(sharpen8, sharp4);
 					__m256 r3 = _mm256_mul_ps(psd4, sigmaSquaredSharpenMax8);
 					__m256 r4 = _mm256_add_ps(psd4, sigmaSquaredSharpenMin8);
-					__m256 r5 = _mm256_add_ps(psd4, sigmaSquaredSharpenMax8);
+					const __m256 r5 = _mm256_add_ps(psd4, sigmaSquaredSharpenMax8);
 					r4 = _mm256_mul_ps(r4, r5);
 					r3 = _mm256_div_ps(r3, r4);
 					r3 = _mm256_sqrt_ps(r3);
@@ -172,14 +172,14 @@ void SharpenFilter::Sharpen_degrid_AVX2() noexcept
 					const __m256 gridcorrection = _mm256_mul_ps(gridfraction8, _mm256_load_ps(gridsample[w])); //gridcorrection
 					__m256 cur = _mm256_load_ps(outcur[w]);
 					cur = _mm256_sub_ps(cur, gridcorrection);
-					__m256 r1 = _mm256_mul_ps(cur, cur);
-					__m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, -, psd2, -
+					const __m256 r1 = _mm256_mul_ps(cur, cur);
+					const __m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, -, psd2, -
 
-					__m256 sharp4 = _mm256_broadcast_ps((__m128*) &wsharpen[w]);
+					const __m256 sharp4 = _mm256_broadcast_ps((__m128*) &wsharpen[w]);
 					__m256 r2 = _mm256_mul_ps(sharpen8, sharp4);
 					__m256 r3 = _mm256_mul_ps(psd4, sigmaSquaredSharpenMax8);
 					__m256 r4 = _mm256_add_ps(psd4, sigmaSquaredSharpenMin8);
-					__m256 r5 = _mm256_add_ps(psd4, sigmaSquaredSharpenMax8);
+					const __m256 r5 = _mm256_add_ps(psd4, sigmaSquaredSharpenMax8);
 					r4 = _mm256_mul_ps(r4, r5);
 					r3 = _mm256_div_ps(r3, r4);
 					r3 = _mm256_sqrt_ps(r3);
@@ -217,10 +217,10 @@ void SharpenFilter::Sharpen_degrid_AVX2() noexcept
 					const __m256 gridcorrection = _mm256_mul_ps(gridfraction8, _mm256_load_ps(gridsample[w])); //gridcorrection
 					__m256 cur = _mm256_load_ps(outcur[w]);
 					cur = _mm256_sub_ps(cur, gridcorrection);
-					__m256 r1 = _mm256_mul_ps(cur, cur);
-					__m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, -, psd2, -
+					const __m256 r1 = _mm256_mul_ps(cur, cur);
+					const __m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, -, psd2, -
 
-					__m256 r3 = _mm256_add_ps(psd4, ht2n8);
+					const __m256 r3 = _mm256_add_ps(psd4, ht2n8);
 					__m256 r4 = _mm256_mul_ps(psd4, dehalo8);
 					r4 = _mm256_fmadd_ps(r4, _mm256_broadcast_ps((__m128*)&wdehalo[w]), r3);
 					__m256 r2 = _mm256_div_ps(r3, r4);
@@ -260,14 +260,14 @@ void SharpenFilter::Sharpen_degrid_AVX2() noexcept
 					const __m256 gridcorrection = _mm256_mul_ps(gridfraction8, _mm256_load_ps(gridsample[w])); //gridcorrection
 					__m256 cur = _mm256_load_ps(outcur[w]);
 					cur = _mm256_sub_ps(cur, gridcorrection);
-					__m256 r1 = _mm256_mul_ps(cur, cur);
-					__m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, -, psd2, -
+					const __m256 r1 = _mm256_mul_ps(cur, cur);
+					const __m256 psd4 = _mm256_hadd_ps(r1, r1); //psd1, -, psd2, -
 
-					__m256 sharp4 = _mm256_broadcast_ps((__m128*) &wsharpen[w]);
+					const __m256 sharp4 = _mm256_broadcast_ps((__m128*) &wsharpen[w]);
 					__m256 r2 = _mm256_mul_ps(sharpen8, sharp4);
 					__m256 r3 = _mm256_mul_ps(psd4, sigmaSquaredSharpenMax8);
 					__m256 r4 = _mm256_add_ps(psd4, sigmaSquaredSharpenMin8);
-					__m256 r5 = _mm256_add_ps(psd4, sigmaSquaredSharpenMax8);
+					const __m256 r5 = _mm256_add_ps(psd4, sigmaSquaredSharpenMax8);
 					r4 = _mm256_mul_ps(r4, r5);
 					r3 = _mm256_div_ps(r3, r4);
 					r3 = _mm256_sqrt_ps(r3);

@@ -69,11 +69,11 @@ void WienerFilter::ApplyWiener2D_SSE() noexcept
 					r3 = _mm_add_ps(r3, r2);
 					r3 = _mm_add_ps(r3, _mm_set1_ps(1e-15f));
 
-					__m128 sharp = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
-					__m128 r7 = _mm_mul_ps(_mm_load1_ps(&sharpen), _mm_unpacklo_ps(sharp, sharp));
+					const __m128 sharp = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
+					const __m128 r7 = _mm_mul_ps(_mm_load1_ps(&sharpen), _mm_unpacklo_ps(sharp, sharp));
 					__m128 r4 = _mm_mul_ps(r3, _mm_load1_ps(&sigmaSquaredSharpenMax));
 					__m128 r5 = _mm_add_ps(r3, _mm_load1_ps(&sigmaSquaredSharpenMin));
-					__m128 r6 = _mm_add_ps(r3, _mm_load1_ps(&sigmaSquaredSharpenMax));
+					const __m128 r6 = _mm_add_ps(r3, _mm_load1_ps(&sigmaSquaredSharpenMax));
 					r5 = _mm_mul_ps(r5, r6);
 					r4 = _mm_div_ps(r4, r5);
 					r4 = _mm_sqrt_ps(r4);
@@ -113,7 +113,7 @@ void WienerFilter::ApplyWiener2D_SSE() noexcept
 					r3 = _mm_add_ps(r3, r2);
 					r3 = _mm_add_ps(r3, _mm_set1_ps(1e-15f));
 
-					__m128 halo = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wdehalo[w]);
+					const __m128 halo = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wdehalo[w]);
 					__m128 r7 = _mm_mul_ps(r3, _mm_unpacklo_ps(halo, halo));
 					__m128 r5 = _mm_add_ps(r3, _mm_load1_ps(&ht2n));
 					r7 = _mm_mul_ps(r7, _mm_load1_ps(&dehalo));
@@ -153,11 +153,11 @@ void WienerFilter::ApplyWiener2D_SSE() noexcept
 					r3 = _mm_add_ps(r3, r2);
 					r3 = _mm_add_ps(r3, _mm_set1_ps(1e-15f));
 
-					__m128 sharp = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
-					__m128 r7 = _mm_mul_ps(_mm_load1_ps(&sharpen), _mm_unpacklo_ps(sharp, sharp));
+					const __m128 sharp = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
+					const __m128 r7 = _mm_mul_ps(_mm_load1_ps(&sharpen), _mm_unpacklo_ps(sharp, sharp));
 					__m128 r4 = _mm_mul_ps(r3, _mm_load1_ps(&sigmaSquaredSharpenMax));
 					__m128 r5 = _mm_add_ps(r3, _mm_load1_ps(&sigmaSquaredSharpenMin));
-					__m128 r6 = _mm_add_ps(r3, _mm_load1_ps(&sigmaSquaredSharpenMax));
+					const __m128 r6 = _mm_add_ps(r3, _mm_load1_ps(&sigmaSquaredSharpenMax));
 					r5 = _mm_mul_ps(r5, r6);
 					r4 = _mm_div_ps(r4, r5);
 					r4 = _mm_sqrt_ps(r4);
@@ -168,7 +168,7 @@ void WienerFilter::ApplyWiener2D_SSE() noexcept
 					r3 = _mm_max_ps(r3, _mm_load1_ps(&lowlimit));
 					r3 = _mm_shuffle_ps(r3, r3, _MM_SHUFFLE(2, 2, 0, 0));
 
-					__m128 halo = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wdehalo[w]);
+					const __m128 halo = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wdehalo[w]);
 					__m128 r8 = _mm_mul_ps(r3, _mm_unpacklo_ps(halo, halo));
 					__m128 r9 = _mm_add_ps(r3, _mm_load1_ps(&ht2n));
 					r8 = _mm_mul_ps(r8, _mm_load1_ps(&dehalo));
@@ -210,7 +210,7 @@ void WienerFilter::ApplyWiener2D_degrid_SSE() noexcept
 				{
 					const __m128 gridcorrection = _mm_mul_ps(gridfraction4, _mm_load_ps(gridsample[w])); //gridcorrection
 					__m128 r1 = _mm_load_ps(outcur[w]);
-					__m128 r4 = _mm_sub_ps(r1, gridcorrection); //corrected
+					const __m128 r4 = _mm_sub_ps(r1, gridcorrection); //corrected
 					__m128 r3 = _mm_mul_ps(r4, r4); //corrected^2
 					__m128 r2 = _mm_shuffle_ps(r3, r3, _MM_SHUFFLE(0, 3, 0, 1));
 					r3 = _mm_add_ps(r3, r2); //psd
@@ -243,7 +243,7 @@ void WienerFilter::ApplyWiener2D_degrid_SSE() noexcept
 				{
 					const __m128 gridcorrection = _mm_mul_ps(gridfraction4, _mm_load_ps(gridsample[w])); //gridcorrection
 					__m128 r1 = _mm_load_ps(outcur[w]);
-					__m128 r4 = _mm_sub_ps(r1, gridcorrection); //corrected
+					const __m128 r4 = _mm_sub_ps(r1, gridcorrection); //corrected
 					__m128 r3 = _mm_mul_ps(r4, r4); //corrected^2
 					__m128 r2 = _mm_shuffle_ps(r3, r3, _MM_SHUFFLE(0, 3, 0, 1));
 					r3 = _mm_add_ps(r3, r2); //psd
@@ -294,7 +294,7 @@ void WienerFilter::ApplyWiener2D_degrid_SSE() noexcept
 				{
 					const __m128 gridcorrection = _mm_mul_ps(gridfraction4, _mm_load_ps(gridsample[w])); //gridcorrection
 					__m128 r1 = _mm_load_ps(outcur[w]);
-					__m128 r4 = _mm_sub_ps(r1, gridcorrection); //corrected
+					const __m128 r4 = _mm_sub_ps(r1, gridcorrection); //corrected
 					__m128 r3 = _mm_mul_ps(r4, r4); //corrected^2
 					__m128 r2 = _mm_shuffle_ps(r3, r3, _MM_SHUFFLE(0, 3, 0, 1));
 					r3 = _mm_add_ps(r3, r2); //psd
@@ -306,7 +306,7 @@ void WienerFilter::ApplyWiener2D_degrid_SSE() noexcept
 
 					__m128 r5 = _mm_add_ps(psd4, _mm_load1_ps(&ht2n));
 					__m128 r6 = _mm_mul_ps(psd4, _mm_load1_ps(&dehalo));
-					__m128 r7 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*)&wdehalo[w]);
+					const __m128 r7 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*)&wdehalo[w]);
 					r6 = _mm_mul_ps(r6, _mm_shuffle_ps(r7, r7, _MM_SHUFFLE(1, 1, 0, 0)));
 					r6 = _mm_add_ps(r5, r6);
 
@@ -340,7 +340,7 @@ void WienerFilter::ApplyWiener2D_degrid_SSE() noexcept
 				{
 					const __m128 gridcorrection = _mm_mul_ps(gridfraction4, _mm_load_ps(gridsample[w])); //gridcorrection
 					__m128 r1 = _mm_load_ps(outcur[w]);
-					__m128 r4 = _mm_sub_ps(r1, gridcorrection); //corrected
+					const __m128 r4 = _mm_sub_ps(r1, gridcorrection); //corrected
 					__m128 r3 = _mm_mul_ps(r4, r4); //corrected^2
 					__m128 r2 = _mm_shuffle_ps(r3, r3, _MM_SHUFFLE(0, 3, 0, 1));
 					r3 = _mm_add_ps(r3, r2); //psd
@@ -360,14 +360,14 @@ void WienerFilter::ApplyWiener2D_degrid_SSE() noexcept
 					r6 = _mm_sqrt_ps(r8);
 
 					r5 = _mm_shuffle_ps(r5, r5, _MM_SHUFFLE(1, 1, 0, 0));
-					__m128 sharp4 = _mm_mul_ps(r5, r6);
+					const __m128 sharp4 = _mm_mul_ps(r5, r6);
 
 					r5 = _mm_add_ps(psd4, _mm_load1_ps(&ht2n));
 					r6 = _mm_mul_ps(psd4, _mm_load1_ps(&dehalo));
 					r7 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*)&wdehalo[w]);
 					r6 = _mm_mul_ps(r6, _mm_shuffle_ps(r7, r7, _MM_SHUFFLE(1, 1, 0, 0)));
 					r6 = _mm_add_ps(r5, r6);
-					__m128 dehalo4 = _mm_div_ps(r5, r6);
+					const __m128 dehalo4 = _mm_div_ps(r5, r6);
 
 					r5 = _mm_mul_ps(sharp4, dehalo4);
 
@@ -412,8 +412,8 @@ void WienerFilter::ApplyWiener3D2_SSE() noexcept
 				r1 = _mm_mul_ps(sum4, sum4);
 				r2 = _mm_mul_ps(dif4, dif4);
 
-				__m128 r3 = _mm_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
-				__m128 r4 = _mm_shuffle_ps(r2, r2, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m128 r3 = _mm_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m128 r4 = _mm_shuffle_ps(r2, r2, _MM_SHUFFLE(0, 3, 0, 1));
 
 				__m128 psds4 = _mm_add_ps(r1, r3);
 				__m128 psdd4 = _mm_add_ps(r2, r4);
@@ -426,8 +426,8 @@ void WienerFilter::ApplyWiener3D2_SSE() noexcept
 				r1 = _mm_div_ps(r1, psds4);
 				r2 = _mm_div_ps(r2, psdd4);
 
-				__m128 WienerFactors4 = _mm_max_ps(r1, _mm_load1_ps(&lowlimit));
-				__m128 WienerFactord4 = _mm_max_ps(r2, _mm_load1_ps(&lowlimit));
+				const __m128 WienerFactors4 = _mm_max_ps(r1, _mm_load1_ps(&lowlimit));
+				const __m128 WienerFactord4 = _mm_max_ps(r2, _mm_load1_ps(&lowlimit));
 
 				r1 = _mm_shuffle_ps(WienerFactors4, WienerFactors4, _MM_SHUFFLE(2, 2, 0, 0));
 				r2 = _mm_shuffle_ps(WienerFactord4, WienerFactord4, _MM_SHUFFLE(2, 2, 0, 0));
@@ -469,8 +469,8 @@ void WienerFilter::ApplyWiener3D2_degrid_SSE() noexcept
 				r1 = _mm_mul_ps(sum4, sum4);
 				r2 = _mm_mul_ps(dif4, dif4);
 
-				__m128 r3 = _mm_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
-				__m128 r4 = _mm_shuffle_ps(r2, r2, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m128 r3 = _mm_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m128 r4 = _mm_shuffle_ps(r2, r2, _MM_SHUFFLE(0, 3, 0, 1));
 
 				__m128 psds4 = _mm_add_ps(r1, r3);
 				__m128 psdd4 = _mm_add_ps(r2, r4);
@@ -483,8 +483,8 @@ void WienerFilter::ApplyWiener3D2_degrid_SSE() noexcept
 				r1 = _mm_div_ps(r1, psds4);
 				r2 = _mm_div_ps(r2, psdd4);
 
-				__m128 WienerFactors4 = _mm_max_ps(r1, _mm_load1_ps(&lowlimit));
-				__m128 WienerFactord4 = _mm_max_ps(r2, _mm_load1_ps(&lowlimit));
+				const __m128 WienerFactors4 = _mm_max_ps(r1, _mm_load1_ps(&lowlimit));
+				const __m128 WienerFactord4 = _mm_max_ps(r2, _mm_load1_ps(&lowlimit));
 
 				r1 = _mm_shuffle_ps(WienerFactors4, WienerFactors4, _MM_SHUFFLE(2, 2, 0, 0));
 				r2 = _mm_shuffle_ps(WienerFactord4, WienerFactord4, _MM_SHUFFLE(2, 2, 0, 0));
@@ -526,7 +526,7 @@ void WienerFilter::ApplyWiener3D3_SSE() noexcept
 			for (int w = 0; w < outwidth; w = w + 2) // 
 			{
 				__m128 r1 = _mm_load_ps(outprev[w]);
-				__m128 pn4 = _mm_add_ps(r1, r2); //r,i,r,i
+				const __m128 pn4 = _mm_add_ps(r1, r2); //r,i,r,i
 				__m128 fc4 = _mm_add_ps(pn4, r3); //r,i,r,i
 
 				__m128 d4 = _mm_sub_ps(r1, r2); //r,i,r,i!
@@ -598,7 +598,7 @@ void WienerFilter::ApplyWiener3D3_SSE() noexcept
 void WienerFilter::ApplyWiener3D3_degrid_SSE() noexcept
 {
 	// dft 3d (very short - 3 points)
-	float sin120 = 0.86602540378443864676372317075294f;//sqrtf(3.0f)*0.5f;
+	constexpr float sin120 = 0.86602540378443864676372317075294f;//sqrtf(3.0f)*0.5f;
 
 	for (int block = start_block; block < blocks; block++)
 	{
@@ -612,7 +612,7 @@ void WienerFilter::ApplyWiener3D3_degrid_SSE() noexcept
 				__m128 gridcorrection = _mm_mul_ps(gridfraction4, _mm_load_ps(gridsample[w])); //gridcorrection
 				gridcorrection = _mm_mul_ps(gridcorrection, _mm_set1_ps(3.0f));
 				__m128 r1 = _mm_load_ps(outprev[w]);
-				__m128 pn4 = _mm_add_ps(r1, r2); //r,i,r,i
+				const __m128 pn4 = _mm_add_ps(r1, r2); //r,i,r,i
 				__m128 fc4 = _mm_add_ps(pn4, r3); //r,i,r,i
 				fc4 = _mm_sub_ps(fc4, gridcorrection);
 
@@ -744,10 +744,10 @@ void WienerFilter::ApplyWiener3D4_SSE() noexcept
 				//t2: fpi1, fpi2, fni1, fni2
 				//t3: fcr1, fcr2, fp2r1, fp2r2
 				//t4: fci1, fci2, fp2i1, fp2i2
-				__m128 sh1 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
-				__m128 sh2 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
-				__m128 sh3 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
-				__m128 sh4 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m128 sh1 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m128 sh2 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m128 sh3 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m128 sh4 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
 
 				r1 = _mm_add_ps(sh1, sh2);
 				r2 = _mm_add_ps(sh3, sh4);
@@ -866,10 +866,10 @@ void WienerFilter::ApplyWiener3D4_degrid_SSE() noexcept
 				//t2: fpi1, fpi2, fni1, fni2
 				//t3: fcr1, fcr2, fp2r1, fp2r2
 				//t4: fci1, fci2, fp2i1, fp2i2
-				__m128 sh1 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
-				__m128 sh2 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
-				__m128 sh3 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
-				__m128 sh4 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m128 sh1 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m128 sh2 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m128 sh3 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m128 sh4 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
 
 				r1 = _mm_add_ps(sh1, sh2);
 				r2 = _mm_add_ps(sh3, sh4);
@@ -937,7 +937,7 @@ void WienerFilter::ApplyWiener3D5_SSE() noexcept
 			{
 				__m128 r1 = _mm_load_ps(outprev2[w]);
 				__m128 r2 = _mm_load_ps(outnext2[w]);
-				__m128 r5 = _mm_load_ps(outcur[w]);
+				const __m128 r5 = _mm_load_ps(outcur[w]);
 
 				__m128 r6 = _mm_add_ps(_mm_mul_ps(r1, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f)), r2); //sum, dif, sum, dif
 				__m128 r7 = _mm_add_ps(r3, _mm_mul_ps(r4, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
@@ -956,8 +956,8 @@ void WienerFilter::ApplyWiener3D5_SSE() noexcept
 				r7 = _mm_add_ps(r6, r7);
 				r7 = _mm_add_ps(r7, _mm_andnot_ps(_mm_set_ps(0.0f, ~0, 0.0f, ~0), r5));
 				r6 = _mm_shuffle_ps(r7, r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m128 fp2i = _mm_add_ps(r7, r6);
-				__m128 fn2i = _mm_sub_ps(r6, r7);
+				const __m128 fp2i = _mm_add_ps(r7, r6);
+				const __m128 fn2i = _mm_sub_ps(r6, r7);
 
 				r6 = _mm_add_ps(r1, _mm_mul_ps(r2, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
 				r7 = _mm_add_ps(r3, _mm_mul_ps(r4, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
@@ -976,8 +976,8 @@ void WienerFilter::ApplyWiener3D5_SSE() noexcept
 				r7 = _mm_add_ps(r6, r7);
 				r7 = _mm_add_ps(r7, _mm_andnot_ps(_mm_set_ps(0.0f, ~0, 0.0f, ~0), r5));
 				r6 = _mm_shuffle_ps(r7, r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m128 fpi = _mm_add_ps(r7, r6);
-				__m128 fni = _mm_sub_ps(r6, r7);
+				const __m128 fpi = _mm_add_ps(r7, r6);
+				const __m128 fni = _mm_sub_ps(r6, r7);
 
 				r6 = _mm_add_ps(r1, r2);
 				r7 = _mm_add_ps(r3, r4);
@@ -1076,7 +1076,7 @@ void WienerFilter::ApplyWiener3D5_degrid_SSE() noexcept
 
 	for (int block = start_block; block < blocks; block++)
 	{
-		__m128 gridfraction4 = _mm_set1_ps(degrid * outcur[0][0] / gridsample[0][0]);
+		const __m128 gridfraction4 = _mm_set1_ps(degrid * outcur[0][0] / gridsample[0][0]);
 		for (int h = 0; h < bh; h++) // first half
 		{
 			__m128 r3 = _mm_load_ps(outprev[0]);
@@ -1087,7 +1087,7 @@ void WienerFilter::ApplyWiener3D5_degrid_SSE() noexcept
 				gridcorrection = _mm_mul_ps(gridcorrection, _mm_set1_ps(5));
 				__m128 r1 = _mm_load_ps(outprev2[w]);
 				__m128 r2 = _mm_load_ps(outnext2[w]);
-				__m128 r5 = _mm_load_ps(outcur[w]);
+				const __m128 r5 = _mm_load_ps(outcur[w]);
 
 				__m128 r6 = _mm_add_ps(_mm_mul_ps(r1, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f)), r2); //sum, dif, sum, dif
 				__m128 r7 = _mm_add_ps(r3, _mm_mul_ps(r4, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
@@ -1106,8 +1106,8 @@ void WienerFilter::ApplyWiener3D5_degrid_SSE() noexcept
 				r7 = _mm_add_ps(r6, r7);
 				r7 = _mm_add_ps(r7, _mm_andnot_ps(_mm_set_ps(0.0f, ~0, 0.0f, ~0), r5));
 				r6 = _mm_shuffle_ps(r7, r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m128 fp2i = _mm_add_ps(r7, r6);
-				__m128 fn2i = _mm_sub_ps(r6, r7);
+				const __m128 fp2i = _mm_add_ps(r7, r6);
+				const __m128 fn2i = _mm_sub_ps(r6, r7);
 
 				r6 = _mm_add_ps(r1, _mm_mul_ps(r2, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
 				r7 = _mm_add_ps(r3, _mm_mul_ps(r4, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
@@ -1126,8 +1126,8 @@ void WienerFilter::ApplyWiener3D5_degrid_SSE() noexcept
 				r7 = _mm_add_ps(r6, r7);
 				r7 = _mm_add_ps(r7, _mm_andnot_ps(_mm_set_ps(0.0f, ~0, 0.0f, ~0), r5));
 				r6 = _mm_shuffle_ps(r7, r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m128 fpi = _mm_add_ps(r7, r6);
-				__m128 fni = _mm_sub_ps(r6, r7);
+				const __m128 fpi = _mm_add_ps(r7, r6);
+				const __m128 fni = _mm_sub_ps(r6, r7);
 
 				r6 = _mm_add_ps(r1, r2);
 				r7 = _mm_add_ps(r3, r4);

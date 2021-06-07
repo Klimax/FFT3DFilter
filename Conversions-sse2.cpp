@@ -48,11 +48,11 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 			inp = inp0 + h * bw;
 			for (w = 0; w < dbwow4; w = w + 4)   // first half line of first block
 			{   // Copy each byte from float array to dest with windows
-				__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
+				const __m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
 				__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 				r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 				r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-				int out_t = _mm_cvtsi128_si32(r1i);
+				const int out_t = _mm_cvtsi128_si32(r1i);
 				memcpy(&dstp[w], &out_t, 4); //Warning: these two lines are transformed by compiler directly into MOVD - no further optimization in SSEx is likely possible!
 			}
 			for (; w < dbwow; w++)   // first half line of first block
@@ -66,13 +66,13 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 				for (w = 0; w < ow4; w = w + 4)   // half line of block
 				{
 					__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), _mm_load_ps(&wsynxr[w]));
-					__m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
+					const __m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
 					r1 = _mm_add_ps(r1, r3);
 					r1 = _mm_mul_ps(r1, norm4);
 					__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 					r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 					r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-					int out_t = _mm_cvtsi128_si32(r1i);
+					const int out_t = _mm_cvtsi128_si32(r1i);
 					memcpy(&dstp[w], &out_t, 4); //Warning: these two lines are transformed by compiler directly into MOVD - no further optimization is likely possible!
 				}
 				for (; w < ow; w++)   // half line of block
@@ -84,11 +84,11 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 
 				for (w = 0; w < d2bwow4; w = w + 4)   // last half line of last block
 				{
-					__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
+					const __m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
 					__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 					r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 					r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-					int out_t = _mm_cvtsi128_si32(r1i);
+					const int out_t = _mm_cvtsi128_si32(r1i);
 					memcpy(&dstp[w], &out_t, 4);
 				}
 				for (; w < d2bwow; w++)   // first half line of first block
@@ -100,11 +100,11 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 			}
 			for (w = 0; w < ow4; w = w + 4)   // last half line of last block
 			{
-				__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
+				const __m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
 				__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 				r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 				r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-				int out_t = _mm_cvtsi128_si32(r1i);
+				const int out_t = _mm_cvtsi128_si32(r1i);
 				memcpy(&dstp[w], &out_t, 4); //Warning: these two lines are transformed by compiler directly into MOVD - no further optimization is likely possible!
 			}
 			for (; w < ow; w++)   // last half line of last block
@@ -132,12 +132,12 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 			for (w = 0; w < dbwow4; w = w + 4)   // first half line of first block
 			{
 				__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), wsynyrh4);
-				__m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + yoffset]), wsynylh4);
+				const __m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + yoffset]), wsynylh4);
 				r1 = _mm_add_ps(r1, r3);
 				__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 				r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 				r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-				int out_t = _mm_cvtsi128_si32(r1i);
+				const int out_t = _mm_cvtsi128_si32(r1i);
 				memcpy(&dstp[w], &out_t, 4); //Warning: these two lines are transformed by compiler directly into MOVD - no further optimization is likely possible!
 			}
 			for (; w < dbwow; w++)   // first half line of first block
@@ -151,9 +151,9 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 				for (w = 0; w < ow4; w = w + 4)   // half overlapped line of block
 				{
 					__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), _mm_load_ps(&wsynxr[w]));
-					__m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
+					const __m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
 					__m128 r6 = _mm_mul_ps(_mm_load_ps(&inp[w + yoffset]), _mm_load_ps(&wsynxr[w]));
-					__m128 r8 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset + yoffset]), _mm_load_ps(&wsynxl[w]));
+					const __m128 r8 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset + yoffset]), _mm_load_ps(&wsynxl[w]));
 					r1 = _mm_add_ps(r1, r3);
 					r6 = _mm_add_ps(r6, r8);
 					r1 = _mm_mul_ps(r1, wsynyrh4);
@@ -163,7 +163,7 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 					__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 					r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 					r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-					int out_t = _mm_cvtsi128_si32(r1i);
+					const int out_t = _mm_cvtsi128_si32(r1i);
 					memcpy(&dstp[w], &out_t, 4); //Warning: these two lines are transformed by compiler directly into MOVD - no further optimization is likely possible!
 				}
 				for (; w < ow; w++)   // half overlapped line of block
@@ -177,12 +177,12 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 				for (w = 0; w < d2bwow4; w = w + 4)   // last half line of last block
 				{
 					__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), wsynyrh4);
-					__m128 r2 = _mm_mul_ps(_mm_load_ps(&inp[w + yoffset]), wsynylh4);
+					const __m128 r2 = _mm_mul_ps(_mm_load_ps(&inp[w + yoffset]), wsynylh4);
 					r1 = _mm_add_ps(r1, r2);
 					__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 					r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 					r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-					int out_t = _mm_cvtsi128_si32(r1i);
+					const int out_t = _mm_cvtsi128_si32(r1i);
 					memcpy(&dstp[w], &out_t, 4);
 				}
 				for (; w < d2bwow; w++)   // double minus - half non-overlapped line of block
@@ -195,12 +195,12 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 			for (w = 0; w < ow4; w = w + 4)   // last half line of last block
 			{
 				__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), wsynyrh4);
-				__m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + yoffset]), wsynylh4);
+				const __m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + yoffset]), wsynylh4);
 				r1 = _mm_add_ps(r1, r3);
 				__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 				r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 				r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-				int out_t = _mm_cvtsi128_si32(r1i);
+				const int out_t = _mm_cvtsi128_si32(r1i);
 				memcpy(&dstp[w], &out_t, 4); //Warning: these two lines are transformed by compiler directly into MOVD - no further optimization is likely possible!
 			}
 			for (; w < ow; w++)   // last half line of last block
@@ -227,13 +227,13 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 				for (w = 0; w < ow4; w = w + 4)   // half overlapped line of block
 				{
 					__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), _mm_load_ps(&wsynxr[w]));
-					__m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
+					const __m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
 					r1 = _mm_add_ps(r1, r3);
 					r1 = _mm_mul_ps(r1, norm4);
 					__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 					r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 					r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-					int out_t = _mm_cvtsi128_si32(r1i);
+					const int out_t = _mm_cvtsi128_si32(r1i);
 					memcpy(&dstp[w], &out_t, 4); //Warning: these two lines are transformed by compiler directly into MOVD - no further optimization is likely possible!
 				}
 				for (; w < ow; w++)   // half overlapped line of block
@@ -245,11 +245,11 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 
 				for (w = 0; w < d2bwow4; w = w + 4)   // last half line of last block
 				{
-					__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
+					const __m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
 					__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 					r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 					r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-					int out_t = _mm_cvtsi128_si32(r1i);
+					const int out_t = _mm_cvtsi128_si32(r1i);
 					memcpy(&dstp[w], &out_t, 4);
 				}
 				for (; w < d2bwow; w++)   // half non-overlapped line of block
@@ -261,11 +261,11 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 			}
 			for (w = 0; w < ow4; w = w + 4)   // last half line of last block
 			{
-				__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
+				const __m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
 				__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 				r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 				r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-				int out_t = _mm_cvtsi128_si32(r1i);
+				const int out_t = _mm_cvtsi128_si32(r1i);
 				memcpy(&dstp[w], &out_t, 4); //Warning: these two lines are transformed by compiler directly into MOVD - no further optimization is likely possible!
 			}
 			for (; w < ow; w++)   // last half line of last block
@@ -287,11 +287,11 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 			inp = inp0 + (ihy - 1)*(yoffset + (bh - oh)*bw) + (bh - oh)*bw + h * bw;
 			for (w = 0; w < dbwow4; w = w + 4)   // first half line of first block
 			{
-				__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
+				const __m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
 				__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 				r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 				r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-				int out_t = _mm_cvtsi128_si32(r1i);
+				const int out_t = _mm_cvtsi128_si32(r1i);
 				memcpy(&dstp[w], &out_t, 4); //Warning: these two lines are transformed by compiler directly into MOVD - no further optimization is likely possible!
 			}
 			for (; w < dbwow; w++)   // first half line of first block
@@ -305,13 +305,13 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 				for (w = 0; w < ow4; w = w + 4)   // half line of block
 				{
 					__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), _mm_load_ps(&wsynxr[w]));
-					__m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
+					const __m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
 					r1 = _mm_add_ps(r1, r3);
 					r1 = _mm_mul_ps(r1, norm4);
 					__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 					r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 					r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-					int out_t = _mm_cvtsi128_si32(r1i);
+					const int out_t = _mm_cvtsi128_si32(r1i);
 					memcpy(&dstp[w], &out_t, 4); //Warning: these two lines are transformed by compiler directly into MOVD - no further optimization is likely possible!
 				}
 				for (; w < ow; w++)   // half line of block
@@ -323,11 +323,11 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 
 				for (w = 0; w < d2bwow4; w = w + 4)   // last half line of last block
 				{
-					__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
+					const __m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
 					__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 					r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 					r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-					int out_t = _mm_cvtsi128_si32(r1i);
+					const int out_t = _mm_cvtsi128_si32(r1i);
 					memcpy(&dstp[w], &out_t, 4);
 				}
 				for (; w < d2bwow; w++)   // half line of block
@@ -339,11 +339,11 @@ void FFT3DFilter::DecodeOverlapPlane_SSE2(const float *__restrict inp0, BYTE *__
 			}
 			for (w = 0; w < ow4; w = w + 4)   // last half line of last block
 			{
-				__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
+				const __m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), norm4);
 				__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), planebase4);
 				r1i = _mm_packs_epi32(r1i, _mm_setzero_si128());
 				r1i = _mm_packus_epi16(r1i, _mm_setzero_si128());
-				int out_t = _mm_cvtsi128_si32(r1i);
+				const int out_t = _mm_cvtsi128_si32(r1i);
 				memcpy(&dstp[w], &out_t, 4); //Warning: these two lines are transformed by compiler directly into MOVD - no further optimization is likely possible!
 			}
 			for (; w < ow; w++)   // last half line of last block

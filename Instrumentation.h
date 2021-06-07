@@ -29,22 +29,22 @@
 struct FrameInstanceData
 {
 	std::string function;
-	int funcinst;
-	LONGLONG start;
-	LONGLONG end;
-	LONGLONG delta;
+	int funcinst = 0;
+	LONGLONG start = {0};
+	LONGLONG end = {0};
+	LONGLONG delta = {0};
 };
 
 struct header
 {
 	std::string function;
-	int instances;
+	int instances = 0;
 };
 
 class FrameData
 {
 public:
-	long unsigned int framenum;
+	long unsigned int framenum = 0;
 	std::vector<FrameInstanceData> framedata;
 	std::unordered_map<std::string, header> headers;
 
@@ -65,7 +65,7 @@ private:
 	std::vector<FrameData> data;
 	std::unordered_map<std::string, header> all_headers;
 	std::vector<std::string> headers_output;
-	LONGLONG frequency;
+	LONGLONG frequency = {0};
 	std::wstring maxinstruction;
 };
 

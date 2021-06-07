@@ -30,7 +30,7 @@ void KalmanFilter::ApplyKalman_AVX512() noexcept
 	// return result in outLast
 	int w(0);
 	fftwf_complex *__restrict covar = covar_in, *__restrict covarProcess = covarProcess_in;
-	float sigmaSquaredMotionNormed = covarNoiseNormed * kratio2;
+	const float sigmaSquaredMotionNormed = covarNoiseNormed * kratio2;
 	const int outwidth8 = outwidth - outwidth % 8;
 	const __m512 covarNoiseNormed8 = _mm512_maskz_broadcastss_ps(0xFFFF, _mm_broadcast_ss(&covarNoiseNormed));
 
@@ -45,18 +45,18 @@ void KalmanFilter::ApplyKalman_AVX512() noexcept
 				// use one of possible method for motion detection:
 				__m512 r3 = _mm512_sub_ps(cur, last);
 				r3 = _mm512_mul_ps(r3, r3);
-				__mmask16 k1 = _mm512_cmp_ps_mask(r3, _mm512_set1_ps(sigmaSquaredMotionNormed), 0x0e);
+				const __mmask16 k1 = _mm512_cmp_ps_mask(r3, _mm512_set1_ps(sigmaSquaredMotionNormed), 0x0e);
 				__mmask16 k2 = k1 << 1;
-				__mmask16 k3 = k2 & 0x5555;
+				const __mmask16 k3 = k2 & 0x5555;
 				k2 = k2 >> 1;
 				k2 = k2 && 0xAAAA;
 				k2 = k1 | k2;
-				__mmask16 mask = _mm512_kor(k3, k2); //positive mask - greater then
+				const __mmask16 mask = _mm512_kor(k3, k2); //positive mask - greater then
 
-				__m512 covarProcess4 = _mm512_load_ps(covarProcess[w]);
+				const __m512 covarProcess4 = _mm512_load_ps(covarProcess[w]);
 
-				__m512 sum = _mm512_add_ps(_mm512_load_ps(covar[w]), covarProcess4);
-				__m512 gain = _mm512_div_ps(sum, _mm512_add_ps(sum, covarNoiseNormed8));
+				const __m512 sum = _mm512_add_ps(_mm512_load_ps(covar[w]), covarProcess4);
+				const __m512 gain = _mm512_div_ps(sum, _mm512_add_ps(sum, covarNoiseNormed8));
 
 				r3 = _mm512_mul_ps(gain, gain);
 				r3 = _mm512_mul_ps(r3, covarNoiseNormed8);
@@ -71,7 +71,7 @@ void KalmanFilter::ApplyKalman_AVX512() noexcept
 				_mm512_store_ps(covar[w], r3);
 
 				r3 = _mm512_mul_ps(gain, last);
-				__m512 r2 = _mm512_sub_ps(last, r3);
+				const __m512 r2 = _mm512_sub_ps(last, r3);
 				r3 = _mm512_fmadd_ps(gain, cur, r2);
 
 				r3 = _mm512_mask_blend_ps(mask, r3, cur);
@@ -133,7 +133,7 @@ void KalmanFilter::ApplyKalmanPattern_AVX512() noexcept
 	// return result in outLast
 	int w(0);
 	fftwf_complex *__restrict covar = covar_in, *__restrict covarProcess = covarProcess_in;
-	__m512 kratio8 = _mm512_set1_ps(kratio2);
+	const __m512 kratio8 = _mm512_set1_ps(kratio2);
 
 	const int outwidth8 = outwidth - outwidth % 8;
 
@@ -144,26 +144,26 @@ void KalmanFilter::ApplyKalmanPattern_AVX512() noexcept
 			for (w = 0; w < outwidth8; w = w + 8)
 			{
 				// use one of possible method for motion detection:
-				__m512 cur = _mm512_load_ps(outcur[w]);
-				__m512 last = _mm512_load_ps(outLast[w]);
+				const __m512 cur = _mm512_load_ps(outcur[w]);
+				const __m512 last = _mm512_load_ps(outLast[w]);
 				__m512 r3 = _mm512_sub_ps(cur, last);
 
-				__m512 cnn4 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0), _mm512_castps256_ps512(_mm256_load_ps(&covarNoiseNormed2[w])));
+				const __m512 cnn4 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0), _mm512_castps256_ps512(_mm256_load_ps(&covarNoiseNormed2[w])));
 				r3 = _mm512_mul_ps(r3, r3);
-				__mmask16 k1 = _mm512_cmp_ps_mask(r3, _mm512_mul_ps(cnn4, kratio8), 0x0e);
+				const __mmask16 k1 = _mm512_cmp_ps_mask(r3, _mm512_mul_ps(cnn4, kratio8), 0x0e);
 				__mmask16 k2 = k1 << 1;
-				__mmask16 k3 = k2 & 0x5555;
+				const __mmask16 k3 = k2 & 0x5555;
 				k2 = k2 >> 1;
 				k2 = k2 && 0xAAAA;
 				k2 = k1 | k2;
 
-				__mmask16 mask = _mm512_kor(k3, k2); //positive mask - greater then
+				const __mmask16 mask = _mm512_kor(k3, k2); //positive mask - greater then
 
-				__m512 covar4 = _mm512_load_ps(covar[w]);
-				__m512 covarProcess4 = _mm512_load_ps(covarProcess[w]);
+				const __m512 covar4 = _mm512_load_ps(covar[w]);
+				const __m512 covarProcess4 = _mm512_load_ps(covarProcess[w]);
 
-				__m512 sum = _mm512_add_ps(covar4, covarProcess4);
-				__m512 gain = _mm512_div_ps(sum, _mm512_add_ps(sum, cnn4));
+				const __m512 sum = _mm512_add_ps(covar4, covarProcess4);
+				const __m512 gain = _mm512_div_ps(sum, _mm512_add_ps(sum, cnn4));
 
 				r3 = _mm512_mul_ps(gain, gain);
 				r3 = _mm512_mul_ps(r3, cnn4);
@@ -177,7 +177,7 @@ void KalmanFilter::ApplyKalmanPattern_AVX512() noexcept
 				_mm512_store_ps(covar[w], r3);
 
 				r3 = _mm512_mul_ps(gain, last);
-				__m512 r2 = _mm512_sub_ps(last, r3);
+				const __m512 r2 = _mm512_sub_ps(last, r3);
 				r3 = _mm512_fmadd_ps(gain, cur, r2);
 
 				r3 = _mm512_mask_blend_ps(mask, r3, cur);

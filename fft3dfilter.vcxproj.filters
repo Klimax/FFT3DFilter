@@ -102,6 +102,48 @@
     <ClCompile Include="Sharpen_sse3.cpp">
       <Filter>Source Files\Sharpen</Filter>
     </ClCompile>
+    <ClCompile Include="Pattern_avx.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_avx2.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_avx512.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_c.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_sse.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_sse2.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Pattern_sse3.cpp">
+      <Filter>Source Files\Pattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_avx.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_avx2.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_avx512.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_c.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_sse.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_sse2.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
+    <ClCompile Include="Wiener_sse3.cpp">
+      <Filter>Source Files\Wiener</Filter>
+    </ClCompile>
     <ClCompile Include="Conversions_c.cpp">
       <Filter>Source Files\Conversions</Filter>
     </ClCompile>
@@ -146,48 +188,6 @@
     </ClCompile>
     <ClCompile Include="Init-ssse3.cpp">
       <Filter>Source Files\Conversions</Filter>
-    </ClCompile>
-    <ClCompile Include="Pattern_avx.cpp">
-      <Filter>Source Files\Pattern</Filter>
-    </ClCompile>
-    <ClCompile Include="Pattern_avx2.cpp">
-      <Filter>Source Files\Pattern</Filter>
-    </ClCompile>
-    <ClCompile Include="Pattern_avx512.cpp">
-      <Filter>Source Files\Pattern</Filter>
-    </ClCompile>
-    <ClCompile Include="Pattern_c.cpp">
-      <Filter>Source Files\Pattern</Filter>
-    </ClCompile>
-    <ClCompile Include="Pattern_sse.cpp">
-      <Filter>Source Files\Pattern</Filter>
-    </ClCompile>
-    <ClCompile Include="Pattern_sse2.cpp">
-      <Filter>Source Files\Pattern</Filter>
-    </ClCompile>
-    <ClCompile Include="Pattern_sse3.cpp">
-      <Filter>Source Files\Pattern</Filter>
-    </ClCompile>
-    <ClCompile Include="Wiener_avx.cpp">
-      <Filter>Source Files\Wiener</Filter>
-    </ClCompile>
-    <ClCompile Include="Wiener_avx2.cpp">
-      <Filter>Source Files\Wiener</Filter>
-    </ClCompile>
-    <ClCompile Include="Wiener_avx512.cpp">
-      <Filter>Source Files\Wiener</Filter>
-    </ClCompile>
-    <ClCompile Include="Wiener_c.cpp">
-      <Filter>Source Files\Wiener</Filter>
-    </ClCompile>
-    <ClCompile Include="Wiener_sse.cpp">
-      <Filter>Source Files\Wiener</Filter>
-    </ClCompile>
-    <ClCompile Include="Wiener_sse2.cpp">
-      <Filter>Source Files\Wiener</Filter>
-    </ClCompile>
-    <ClCompile Include="Wiener_sse3.cpp">
-      <Filter>Source Files\Wiener</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

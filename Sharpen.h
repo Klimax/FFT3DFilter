@@ -56,6 +56,3 @@ public:
 
 	fftwf_complex *outcur;
 };
-
-//Multithreaded versions
-DWORD WINAPI Sharpen_MT(LPVOID lpParam);

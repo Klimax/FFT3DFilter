@@ -79,6 +79,9 @@
 					upgraded to MSVC 2017, corrected error message, added support for env variable, measurment code for performance testing, AVX 512 support
 					note: ApplyKalmanPattern is broken - unknown casue
 					Massive refactoring
+	Version 3.0.1 - Limited to C++17, because avisynth.h has some problems under c++20 compilation
+        Version 3.1 - 2021 - Changed to VS 2019, threads are created using std::thread and thus trampolines are removed,
+                           -sanity checking on multithreading and ncpu parameter versus number of threads of current CPU
 */
 
 #include "fft3dfilter.h"
@@ -103,17 +106,16 @@ function(__VA_ARGS__);
 
 
 #ifdef DEBUGDUMP
-#define DUMP() \
-instrumentation.AddInstance(std::string(#function),PerformanceCount.QuadPart,PerformanceCount2.QuadPart);
+#define DUMP()
 #else
-#define DUMP() \
+#define DUMP()
 
 #endif // MEASURING
 
 // The following is the implementation
 // of the defined functions.
 
-AVS_Linkage *AVS_linkage = 0;
+AVS_Linkage* AVS_linkage = nullptr;
 
 //Here is the acutal constructor code used
 FFT3DFilter::FFT3DFilter(PClip _child, float _sigma, float _beta, int _plane, int _bw, int _bh, int _bt, int _ow, int _oh,
@@ -209,7 +211,7 @@ FFT3DFilter::FFT3DFilter(PClip _child, float _sigma, float _beta, int _plane, in
 #endif
 
 	hinstLib = LoadLibrary(L"fftw3.dll"); // added in v 0.8.4 for delayed loading
-	if (hinstLib != NULL)
+	if (hinstLib != nullptr)
 	{
 		fftwf_free = (fftwf_free_proc)GetProcAddress(hinstLib, "fftwf_free");
 		fftwf_malloc = (fftwf_malloc_proc)GetProcAddress(hinstLib, "fftwf_malloc");
@@ -222,43 +224,54 @@ FFT3DFilter::FFT3DFilter(PClip _child, float _sigma, float _beta, int _plane, in
 		fftwf_plan_with_nthreads = (fftwf_plan_with_nthreads_proc)GetProcAddress(hinstLib, "fftwf_plan_with_nthreads");
 		istat = fftwf_init_threads();
 	}
-	if (istat == 0 || hinstLib == NULL || fftwf_free == NULL || fftwf_malloc == NULL || fftwf_plan_many_dft_r2c == NULL ||
-		fftwf_plan_many_dft_c2r == NULL || fftwf_destroy_plan == NULL || fftwf_execute_dft_r2c == NULL || fftwf_execute_dft_c2r == NULL)
+	if (istat == 0 || hinstLib == nullptr || fftwf_free == nullptr || fftwf_malloc == nullptr || fftwf_plan_many_dft_r2c == nullptr ||
+		fftwf_plan_many_dft_c2r == nullptr || fftwf_destroy_plan == nullptr || fftwf_execute_dft_r2c == nullptr || fftwf_execute_dft_c2r == nullptr)
 		env->ThrowError("FFT3DFilter: Can not load FFTW3.DLL !");
 
 
 	coverwidth = nox * (bw - ow) + ow;
 	coverheight = noy * (bh - oh) + oh;
 	coverpitch = ((coverwidth + 7) / 8) * 8;
-	coverbuf = (BYTE*)_aligned_malloc(coverheight*coverpitch, malign);
+	coverbuf = (BYTE*)_aligned_malloc(coverheight * coverpitch, malign);
 
-	const int insize = bw * bh*nox*noy;
-	in = (float *)_aligned_malloc(sizeof(float) * insize, malign);
+	const int insize = bw * bh * nox * noy;
+	in = (float*)_aligned_malloc(sizeof(float) * insize, malign);
 	outwidth = bw / 2 + 1; // width (pitch) of complex fft block
 
 	if ((CPUFlags & CPUK_AVX2) || (CPUFlags & CPUK_AVX)) { outpitch = ((outwidth + 1) / 2) * 4; } // must be divisible by 4 (full 256b operations) for AVX // somehow breaks Wintype 0 and 1
 	else { outpitch = ((outwidth + 1) / 2) * 2; } // must be even for SSE - v1.7 //Also it is demanded by FFTW to fit full array
 
-	outsize = outpitch * bh*nox*noy; // replace outwidth to outpitch here and below in v1.7
+	outsize = outpitch * bh * nox * noy; // replace outwidth to outpitch here and below in v1.7
+
+	const auto CurCPU = GetCurrentProcessorNumber();
+	SetThreadIdealProcessor(GetCurrentThread(), CurCPU);
+	unsigned char CurNode;
+	GetNumaProcessorNode(CurCPU, &CurNode);
+	//MemoryPages = (unsigned char*)VirtualAllocExNuma(GetCurrentProcess(),nullptr,sizeof(fftwf_complex) * outsize * 14,MEM_COMMIT | MEM_RESERVE,PAGE_EXECUTE_READWRITE,CurNode);
+
+	if (howmanyblocks / ncpu < 2) { ncpu = nox * noy; }
+	const int NumCPUs = GetMaximumProcessorCount(ALL_PROCESSOR_GROUPS);
+	if (NumCPUs < ncpu) { ncpu = NumCPUs - 1; }
+
 	if (bt == 0) // Kalman
 	{
-		outLast = (fftwf_complex *)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign);
-		covar = (fftwf_complex *)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign);
-		covarProcess = (fftwf_complex *)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign);
+		outLast = (fftwf_complex*)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign);
+		covar = (fftwf_complex*)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign);
+		covarProcess = (fftwf_complex*)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign);
 	}
 
-	outrez = (fftwf_complex *)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign); //v1.8
-	gridsample = (fftwf_complex *)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign); //v1.8
+	outrez = (fftwf_complex*)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign); //v1.8
+	gridsample = (fftwf_complex*)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign); //v1.8
 
 	// fft cache - added in v1.8
 	cachesize = bt + 2;
-	cachewhat = (int *)_aligned_malloc(sizeof(int)*cachesize, 32);
-	cachefft = (fftwf_complex **)_aligned_malloc(sizeof(fftwf_complex *)*cachesize, malign);
+	cachewhat = (int*)_aligned_malloc(sizeof(int) * cachesize, 32);
+	cachefft = (fftwf_complex * *)_aligned_malloc(sizeof(fftwf_complex*) * cachesize, malign);
 
 	for (int i = 0; i < cachesize; i++)
 	{
 		cachefft[i] = nullptr;
-		cachefft[i] = (fftwf_complex *)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign);
+		cachefft[i] = (fftwf_complex*)_aligned_malloc(sizeof(fftwf_complex) * outsize, malign);
 		cachewhat[i] = -1; // init as nonexistant
 	}
 
@@ -289,12 +302,12 @@ FFT3DFilter::FFT3DFilter(PClip _child, float _sigma, float _beta, int _plane, in
 
 	plan = fftwf_plan_many_dft_r2c(rank, ndim, howmanyblocks,
 		in, inembed, istride, idist, outrez, onembed, ostride, odist, planFlags);
-	if (plan == NULL)
+	if (plan == nullptr)
 		env->ThrowError("FFT3DFilter: FFTW plan error");
 
 	planinv = fftwf_plan_many_dft_c2r(rank, ndim, howmanyblocks,
 		outrez, onembed, ostride, odist, in, inembed, istride, idist, planFlags);
-	if (planinv == NULL)
+	if (planinv == nullptr)
 		env->ThrowError("FFT3DFilter: FFTW plan error");
 
 	fftwf_plan_with_nthreads(1);
@@ -309,8 +322,8 @@ FFT3DFilter::FFT3DFilter(PClip _child, float _sigma, float _beta, int _plane, in
 	wsynyl = (float*)_aligned_malloc(oh * sizeof(float), malign);
 	wsynyr = (float*)_aligned_malloc(oh * sizeof(float), malign);
 
-	wsharpen = (float*)fftwf_malloc(bh*outpitch * sizeof(float));
-	wdehalo = (float*)fftwf_malloc(bh*outpitch * sizeof(float));
+	wsharpen = (float*)fftwf_malloc(bh * outpitch * sizeof(float));
+	wdehalo = (float*)fftwf_malloc(bh * outpitch * sizeof(float));
 
 	GenWindows();
 
@@ -318,7 +331,7 @@ FFT3DFilter::FFT3DFilter(PClip _child, float _sigma, float _beta, int _plane, in
 	nlast = -999; // init as nonexistant
 	btcurlast = -999; // init as nonexistant
 
-	norm = 1.0f / (bw*bh); // do not forget set FFT normalization factor
+	norm = 1.0f / (bw * bh); // do not forget set FFT normalization factor
 
 	sigmaSquaredNoiseNormed2D = sigma * sigma / norm;
 	sigmaNoiseNormed2D = sigma / sqrtf(norm);
@@ -335,33 +348,33 @@ FFT3DFilter::FFT3DFilter(PClip _child, float _sigma, float _beta, int _plane, in
 		fill_complex(covarProcess, outsize, sigmaSquaredNoiseNormed2D, sigmaSquaredNoiseNormed2D);// fixed bug in v.1.1
 	}
 
-	mean = (float*)_aligned_malloc(nox*noy * sizeof(float), malign);
-	for (int i = 0; i < nox*noy; i++) { mean[i] = 0.0f; }
+	mean = (float*)_aligned_malloc(nox * noy * sizeof(float), malign);
+	for (int i = 0; i < nox * noy; i++) { mean[i] = 0.0f; }
 
-	pwin = (float*)_aligned_malloc(bh*outpitch * sizeof(float), malign); // pattern window array
-	for (int i = 0; i < bh*outpitch; i++) { pwin[i] = 0.0f; }
+	pwin = (float*)_aligned_malloc(bh * outpitch * sizeof(float), malign); // pattern window array
+	for (int i = 0; i < bh * outpitch; i++) { pwin[i] = 0.0f; }
 
 	float fw2(0.0f), fh2(0.0f);
 	for (int j = 0; j < bh; j++)
 	{
 		if (j < bh / 2)
-			fh2 = (j*2.0f / bh)*(j*2.0f / bh);
+			fh2 = (j * 2.0f / bh) * (j * 2.0f / bh);
 		else
-			fh2 = ((bh - 1 - j)*2.0f / bh)*((bh - 1 - j)*2.0f / bh);
+			fh2 = ((bh - 1 - j) * 2.0f / bh) * ((bh - 1 - j) * 2.0f / bh);
 		for (int i = 0; i < outwidth; i++)
 		{
-			fw2 = (i*2.0f / bw)*(j*2.0f / bw);
+			fw2 = (i * 2.0f / bw) * (j * 2.0f / bw);
 			pwin[i] = (fh2 + fw2) / (fh2 + fw2 + pcutoff * pcutoff);
 		}
 		pwin += outpitch;
 	}
 	pwin -= outpitch * bh; // restore pointer
 
-	pattern2d = (float*)_aligned_malloc(bh*outpitch * sizeof(float), malign); // noise pattern window array
-	for (int i = 0; i < bh*outpitch; i++) { pattern2d[i] = 0.0f; }
+	pattern2d = (float*)_aligned_malloc(bh * outpitch * sizeof(float), malign); // noise pattern window array
+	for (int i = 0; i < bh * outpitch; i++) { pattern2d[i] = 0.0f; }
 
-	pattern3d = (float*)_aligned_malloc(bh*outpitch * sizeof(float), malign); // noise pattern window array
-	for (int i = 0; i < bh*outpitch; i++) { pattern3d[i] = 0.0f; }
+	pattern3d = (float*)_aligned_malloc(bh * outpitch * sizeof(float), malign); // noise pattern window array
+	for (int i = 0; i < bh * outpitch; i++) { pattern3d[i] = 0.0f; }
 
 	if ((sigma2 != sigma || sigma3 != sigma || sigma4 != sigma) && pfactor == 0)
 	{// we have different sigmas, so create pattern from sigmas
@@ -377,18 +390,14 @@ FFT3DFilter::FFT3DFilter(PClip _child, float _sigma, float _beta, int _plane, in
 	plan1 = fftwf_plan_many_dft_r2c(rank, ndim, 1,
 		in, inembed, istride, idist, outrez, onembed, ostride, odist, planFlags); // 1 block
 
-	memset(coverbuf, 255, coverheight*coverpitch);
+	memset(coverbuf, 255, coverheight * coverpitch);
 	InitOverlapPlane(*this, in, coverbuf);
 	// make FFT 2D
 	fftwf_execute_dft_r2c(plan1, in, gridsample);
 
-	if (howmanyblocks / ncpu < 2) { ncpu = howmanyblocks; }
-	int NumCPUs = GetMaximumProcessorCount(ALL_PROCESSOR_GROUPS);
-	if (NumCPUs < ncpu) { ncpu = NumCPUs - 1; }
-
 	filters.Init(howmanyblocks, ncpu, CPUFlags, outwidth, outpitch, bh, degrid, beta, gridsample,
 		sharpen, sigmaSquaredSharpenMinNormed, sigmaSquaredSharpenMaxNormed, wsharpen, dehalo,
-		wdehalo, ht2n, covar, covarProcess, kratio*kratio);
+		wdehalo, ht2n, covar, covarProcess, kratio * kratio);
 }
 //-------------------------------------------------------------------------------------------
 
@@ -492,7 +501,8 @@ void FFT3DFilter::DetectFeatures(IScriptEnvironment* env)
 		MaxFeatures = std::stoul(TempString);
 	}
 
-	switch (MaxFeatures) {
+	switch (MaxFeatures) 
+	{
 	case CPUK_AVX512:
 		if (CPUFlags & CPUF_AVX512) { NewCPUFlags = NewCPUFlags | CPUK_AVX512; }
 	case CPUK_AVX2:
@@ -526,24 +536,24 @@ void FFT3DFilter::DetectFeatures(IScriptEnvironment* env)
 #endif
 }
 
-void FFT3DFilter::GenWindows()
+void FFT3DFilter::GenWindows() noexcept
 {
 	// define analysis and synthesis windows
 	// combining window (analize mult by synthesis) is raised cosine (Hanning)
-	const float pi = 3.1415926535897932384626433832795f;
+	constexpr float pi = 3.1415926535897932384626433832795f;
 	if (wintype == 0) // window type
 	{ // , used in all version up to 1.3
 	  // half-cosine, the same for analysis and synthesis
 	  // define analysis windows
 		for (int i = 0; i < ow; i++)
 		{
-			wanxl[i] = cosf(pi*(i - ow + 0.5f) / (ow * 2)); // left analize window (half-cosine)
-			wanxr[i] = cosf(pi*(i + 0.5f) / (ow * 2)); // right analize window (half-cosine)
+			wanxl[i] = cosf(pi * (i - ow + 0.5f) / (ow * 2)); // left analize window (half-cosine)
+			wanxr[i] = cosf(pi * (i + 0.5f) / (ow * 2)); // right analize window (half-cosine)
 		}
 		for (int i = 0; i < oh; i++)
 		{
-			wanyl[i] = cosf(pi*(i - oh + 0.5f) / (oh * 2));
-			wanyr[i] = cosf(pi*(i + 0.5f) / (oh * 2));
+			wanyl[i] = cosf(pi * (i - oh + 0.5f) / (oh * 2));
+			wanyr[i] = cosf(pi * (i + 0.5f) / (oh * 2));
 		}
 		// use the same windows for synthesis too.
 		for (int i = 0; i < ow; i++)
@@ -563,13 +573,13 @@ void FFT3DFilter::GenWindows()
 		// define analysis windows as more flat (to decrease grid)
 		for (int i = 0; i < ow; i++)
 		{
-			wanxl[i] = sqrt(cosf(pi*(i - ow + 0.5f) / (ow * 2)));
-			wanxr[i] = sqrt(cosf(pi*(i + 0.5f) / (oh * 2)));
+			wanxl[i] = sqrt(cosf(pi * (i - ow + 0.5f) / (ow * 2)));
+			wanxr[i] = sqrt(cosf(pi * (i + 0.5f) / (oh * 2)));
 		}
 		for (int i = 0; i < oh; i++)
 		{
-			wanyl[i] = sqrt(cosf(pi*(i - oh + 0.5f) / (oh * 2)));
-			wanyr[i] = sqrt(cosf(pi*(i + 0.5f) / (oh * 2)));
+			wanyl[i] = sqrt(cosf(pi * (i - oh + 0.5f) / (oh * 2)));
+			wanyr[i] = sqrt(cosf(pi * (i + 0.5f) / (oh * 2)));
 		}
 		// define synthesis as supplenent to rised cosine (Hanning)
 		for (int i = 0; i < ow; i++)
@@ -585,30 +595,19 @@ void FFT3DFilter::GenWindows()
 	}
 	else //  (wintype==2) - added in v.1.4
 	{
-		// define analysis windows as flat (to prevent grid)
-		for (int i = 0; i < ow; i++)
-		{
-			wanxl[i] = 1.0f;
-			wanxr[i] = 1.0f;
-		}
-		for (int i = 0; i < oh; i++)
-		{
-			wanyl[i] = 1.0f;
-			wanyr[i] = 1.0f;
-		}
 		// define synthesis as rised cosine (Hanning)
 		for (int i = 0; i < ow; i++)
 		{
-			const float temp = cosf(pi*(i - ow + 0.5f) / (ow * 2));
+			const float temp = cosf(pi * (i - ow + 0.5f) / (ow * 2));
 			wsynxl[i] = temp * temp;// left window (rised cosine)
-			const float temp2 = cosf(pi*(i + 0.5f) / (ow * 2));
+			const float temp2 = cosf(pi * (i + 0.5f) / (ow * 2));
 			wsynxr[i] = temp2 * temp2; // right window (falled cosine)
 		}
 		for (int i = 0; i < oh; i++)
 		{
-			const float temp = cosf(pi*(i - oh + 0.5f) / (oh * 2));
+			const float temp = cosf(pi * (i - oh + 0.5f) / (oh * 2));
 			wsynyl[i] = temp * temp;
-			const float temp2 = cosf(pi*(i + 0.5f) / (oh * 2));
+			const float temp2 = cosf(pi * (i + 0.5f) / (oh * 2));
 			wsynyr[i] = temp2 * temp2;
 		}
 	}
@@ -619,11 +618,11 @@ void FFT3DFilter::GenWindows()
 		int dj = j;
 		if (j >= bh / 2)
 			dj = bh - j;
-		const float d2v = float(dj*dj)*(svr*svr) / ((bh / 2)*(bh / 2)); // v1.7
+		const float d2v = float(dj * dj) * (svr * svr) / ((bh / 2) * (bh / 2)); // v1.7
 		for (int i = 0; i < outwidth; i++)
 		{
-			const float d2 = d2v + float(i*i) / ((bw / 2)*(bw / 2)); // distance_2 - v1.7
-			wsharpen[i] = 1 - exp(-d2 / (2 * scutoff*scutoff));
+			const float d2 = d2v + float(i * i) / ((bw / 2) * (bw / 2)); // distance_2 - v1.7
+			wsharpen[i] = 1 - exp(-d2 / (2 * scutoff * scutoff));
 		}
 		wsharpen += outpitch;
 	}
@@ -636,11 +635,11 @@ void FFT3DFilter::GenWindows()
 		int dj = j;
 		if (j >= bh / 2)
 			dj = bh - j;
-		const float d2v = float(dj*dj)*(svr*svr) / ((bh / 2)*(bh / 2));
+		const float d2v = float(dj * dj) * (svr * svr) / ((bh / 2) * (bh / 2));
 		for (int i = 0; i < outwidth; i++)
 		{
-			const float d2 = d2v + float(i*i) / ((bw / 2)*(bw / 2)); // squared distance in frequency domain
-			wdehalo[i] = exp(-0.7f*d2*hr*hr) - exp(-d2 * hr*hr); // some window with max around 1/hr, small at low and high frequencies
+			const float d2 = d2v + float(i * i) / ((bw / 2) * (bw / 2)); // squared distance in frequency domain
+			wdehalo[i] = exp(-0.7f * d2 * hr * hr) - exp(-d2 * hr * hr); // some window with max around 1/hr, small at low and high frequencies
 			if (wdehalo[i] > wmax) { wmax = wdehalo[i]; } // for normalization
 		}
 		wdehalo += outpitch;
@@ -661,6 +660,8 @@ void FFT3DFilter::GenWindows()
 // This is where any actual destructor code used goes
 FFT3DFilter::~FFT3DFilter() {
 	// This is where you can deallocate any memory you might have used.
+	//VirtualFreeEx(GetCurrentProcess(), MemoryPages, 0, MEM_RELEASE);
+
 	fftwf_destroy_plan(plan);
 	fftwf_destroy_plan(plan1);
 	fftwf_destroy_plan(planinv);
@@ -695,7 +696,7 @@ FFT3DFilter::~FFT3DFilter() {
 	_aligned_free(cachefft);
 	_aligned_free(gridsample); //fixed memory leakage in v1.8.5
 
-	if (hinstLib != NULL)
+	if (hinstLib != nullptr)
 		FreeLibrary(hinstLib);
 
 #ifdef MEASURING
@@ -704,17 +705,17 @@ FFT3DFilter::~FFT3DFilter() {
 }
 
 //-------------------------------------------------------------------------------------------
-void Copyfft(fftwf_complex *outrez, const fftwf_complex *outprev, int outsize, IScriptEnvironment* env)
+void Copyfft(fftwf_complex* outrez, const fftwf_complex* outprev, int outsize, IScriptEnvironment* env)
 { // save outprev to outrez to prevent cache change (inverse fft2d will destroy the array)
-	env->BitBlt((BYTE*)&outrez[0][0], outsize * 8, (BYTE*)&outprev[0][0], outsize * 8, outsize * 8, 1); // faster
+	env->BitBlt((BYTE*)& outrez[0][0], outsize * 8, (BYTE*)& outprev[0][0], outsize * 8, outsize * 8, 1); // faster
 }
 
 //-------------------------------------------------------------------------------------------
-void SortCache(int *cachewhat, fftwf_complex **cachefft, int cachesize, int cachestart, int cachestartold) noexcept
+void SortCache(int* cachewhat, fftwf_complex** cachefft, int cachesize, int cachestart, int cachestartold) noexcept
 {
 	// sort ordered series, put existant ffts to proper places
 	int i(0), ctemp(0);
-	fftwf_complex *ffttemp(nullptr);
+	fftwf_complex* ffttemp(nullptr);
 
 	int offset = cachestart - cachestartold;
 	if (offset > 0) // right
@@ -751,10 +752,10 @@ void SortCache(int *cachewhat, fftwf_complex **cachefft, int cachesize, int cach
 }
 //-------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------
-void CopyFrame(const PVideoFrame &src, PVideoFrame &dst, VideoInfo vi, int planeskip, IScriptEnvironment* env)
+void CopyFrame(const PVideoFrame& src, PVideoFrame& dst, VideoInfo vi, int planeskip, IScriptEnvironment* env)
 {
-	const BYTE * srcp(nullptr);
-	BYTE * dstp(nullptr);
+	const BYTE* srcp(nullptr);
+	BYTE* dstp(nullptr);
 	int src_height(0), src_width(0), src_pitch(0);
 	int dst_height(0), dst_width(0), dst_pitch(0);
 	int planeNum(0), plane(0);
@@ -874,7 +875,7 @@ PVideoFrame __stdcall FFT3DFilter::GetFrame(int n, IScriptEnvironment* env) {
 		const int psigmaint = ((int)(10 * psigma)) / 10;
 		const int psigmadec = (int)((psigma - psigmaint) * 10);
 
-		TCHAR *messagebuf = (TCHAR *)malloc(80); //1.8.5;
+		TCHAR* messagebuf = (TCHAR*)malloc(80); //1.8.5;
 		wsprintf(messagebuf, L" frame=%d, px=%d, py=%d, sigma=%d.%d", n, pxf, pyf, psigmaint, psigmadec);
 
 		DrawString(dst, 0, 0, messagebuf, vi.IsYUY2());
@@ -902,7 +903,7 @@ PVideoFrame __stdcall FFT3DFilter::GetFrame(int n, IScriptEnvironment* env) {
 
 	if (btcur > 0) // Wiener
 	{
-		sigmaSquaredNoiseNormed = btcur * sigma*sigma / norm; // normalized variation=sigma^2
+		sigmaSquaredNoiseNormed = btcur * sigma * sigma / norm; // normalized variation=sigma^2
 
 		if (btcur != btcurlast)
 		{
@@ -1253,7 +1254,7 @@ PVideoFrame __stdcall FFT3DFilter::GetFrame(int n, IScriptEnvironment* env) {
 		}
 
 		// copy outLast to outrez
-		env->BitBlt((BYTE*)&outrez[0][0], outsize * sizeof(fftwf_complex), (BYTE*)&outLast[0][0], outsize * sizeof(fftwf_complex), outsize * sizeof(fftwf_complex), 1);  //v.0.9.2
+		env->BitBlt((BYTE*)& outrez[0][0], outsize * sizeof(fftwf_complex), (BYTE*)& outLast[0][0], outsize * sizeof(fftwf_complex), outsize * sizeof(fftwf_complex), 1);  //v.0.9.2
 		MEASURMENT(filters.Sharpen, outrez);
 
 		// do inverse FFT 2D, get filtered 'in' array
@@ -1478,10 +1479,10 @@ PVideoFrame __stdcall FFT3DFilterMulti::GetFrame(int n, IScriptEnvironment* env)
 		{
 			const int height = dst->GetHeight();
 			const int width = dst->GetRowSize();
-			BYTE * pdst = dst->GetWritePtr();
-			const BYTE * pY = fY->GetReadPtr();
-			const BYTE * pU = fU->GetReadPtr();
-			const BYTE * pV = fV->GetReadPtr();
+			BYTE* pdst = dst->GetWritePtr();
+			const BYTE* pY = fY->GetReadPtr();
+			const BYTE* pU = fU->GetReadPtr();
+			const BYTE* pV = fV->GetReadPtr();
 			for (int h = 0; h < height; h++)
 			{
 				for (int w = 0; w < width; w += 4)

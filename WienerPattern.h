@@ -149,10 +149,3 @@ public:
 	fftwf_complex *outcur, *outprev2, *outprev, *outnext, *outnext2;
 	float *pattern3d, pfactor;
 };
-
-//Multithreaded versions
-DWORD WINAPI ApplyPattern2D_MT(LPVOID lpParam);
-DWORD WINAPI ApplyPattern3D2_MT(LPVOID lpParam);
-DWORD WINAPI ApplyPattern3D3_MT(LPVOID lpParam);
-DWORD WINAPI ApplyPattern3D4_MT(LPVOID lpParam);
-DWORD WINAPI ApplyPattern3D5_MT(LPVOID lpParam);

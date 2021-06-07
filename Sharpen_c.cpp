@@ -173,7 +173,7 @@ void SharpenFilter::Sharpen_degrid_C() noexcept
 	{
 		for (int block = start_block; block < blocks; block++)
 		{
-			float gridfraction = degrid * outcur[0][0] / gridsample[0][0];
+			const float gridfraction = degrid * outcur[0][0] / gridsample[0][0];
 			for (int h = 0; h < bh; h++) // middle
 			{
 				for (int w = 0; w < outwidth; w++)

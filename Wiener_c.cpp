@@ -348,12 +348,12 @@ void WienerFilter::ApplyWiener3D3_C() noexcept
 			for (int w = 0; w < outwidth; w++) // 
 			{
 				// dft 3d (very short - 3 points)
-				float pnr = outprev[w][0] + outnext[w][0];
-				float pni = outprev[w][1] + outnext[w][1];
+				const float pnr = outprev[w][0] + outnext[w][0];
+				const float pni = outprev[w][1] + outnext[w][1];
 				fcr = outcur[w][0] + pnr; // real cur
 				fci = outcur[w][1] + pni; // im cur
-				float di = sin120 * (outprev[w][1] - outnext[w][1]);
-				float dr = sin120 * (outnext[w][0] - outprev[w][0]);
+				const float di = sin120 * (outprev[w][1] - outnext[w][1]);
+				const float dr = sin120 * (outnext[w][0] - outprev[w][0]);
 				fpr = outcur[w][0] - 0.5f*pnr + di; // real prev
 				fnr = fpr - di - di; //v1.8.1
 				fpi = outcur[w][1] - 0.5f*pni + dr; // im prev
@@ -399,14 +399,14 @@ void WienerFilter::ApplyWiener3D3_degrid_C() noexcept
 				float gridcorrection0_3 = gridfraction * gridsample[w][0] * 3;
 				float gridcorrection1_3 = gridfraction * gridsample[w][1] * 3;
 				// dft 3d (very short - 3 points)
-				float pnr = outprev[w][0] + outnext[w][0];
-				float pni = outprev[w][1] + outnext[w][1];
+				const float pnr = outprev[w][0] + outnext[w][0];
+				const float pni = outprev[w][1] + outnext[w][1];
 				fcr = outcur[w][0] + pnr; // real cur
 				fcr -= gridcorrection0_3;
 				fci = outcur[w][1] + pni; // im cur
 				fci -= gridcorrection1_3;
-				float di = sin120 * (outprev[w][1] - outnext[w][1]);
-				float dr = sin120 * (outnext[w][0] - outprev[w][0]);
+				const float di = sin120 * (outprev[w][1] - outnext[w][1]);
+				const float dr = sin120 * (outnext[w][0] - outprev[w][0]);
 				fpr = outcur[w][0] - 0.5f*pnr + di; // real prev
 				fnr = outcur[w][0] - 0.5f*pnr - di; // real next
 				fpi = outcur[w][1] - 0.5f*pni + dr; // im prev

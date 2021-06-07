@@ -34,14 +34,14 @@ void PatternFilter::ApplyPattern2D_AVX2() noexcept
 		{
 			for (int w = 0; w < outwidth; w = w + 4)
 			{
-				__m256 cur = _mm256_load_ps(outcur[w]);
+				const __m256 cur = _mm256_load_ps(outcur[w]);
 				__m256 r1 = _mm256_mul_ps(cur, cur);
 				r1 = _mm256_hadd_ps(r1, r1);
 				r1 = _mm256_add_ps(r1, _mm256_set1_ps(1e-15f));
 
 				__m256 pf = _mm256_broadcast_ps((__m128*) &pattern2d[w]);
 				pf = _mm256_mul_ps(pf, _mm256_broadcast_ss(&pfactor));
-				__m256 r2 = _mm256_sub_ps(r1, pf);
+				const __m256 r2 = _mm256_sub_ps(r1, pf);
 				r1 = _mm256_div_ps(r2, r1);
 				r1 = _mm256_max_ps(r1, _mm256_broadcast_ss(&lowlimit));
 				r1 = _mm256_permutevar_ps(r1, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0));
@@ -77,7 +77,7 @@ void PatternFilter::ApplyPattern2D_degrid_AVX2() noexcept
 
 				__m256 pf = _mm256_broadcast_ps((__m128*) &pattern2d[w]);
 				pf = _mm256_mul_ps(pf, _mm256_broadcast_ss(&pfactor));
-				__m256 r2 = _mm256_sub_ps(r1, pf);
+				const __m256 r2 = _mm256_sub_ps(r1, pf);
 				r1 = _mm256_div_ps(r2, r1);
 				r1 = _mm256_max_ps(r1, _mm256_broadcast_ss(&lowlimit));
 				r1 = _mm256_permutevar_ps(r1, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0));
@@ -127,8 +127,8 @@ void PatternFilter::ApplyPattern3D2_AVX2() noexcept
 				r1 = _mm256_div_ps(r1, psds4);
 				r2 = _mm256_div_ps(r2, psdd4);
 
-				__m256 WienerFactors4 = _mm256_max_ps(r1, _mm256_broadcast_ss(&lowlimit));
-				__m256 WienerFactord4 = _mm256_max_ps(r2, _mm256_broadcast_ss(&lowlimit));
+				const __m256 WienerFactors4 = _mm256_max_ps(r1, _mm256_broadcast_ss(&lowlimit));
+				const __m256 WienerFactord4 = _mm256_max_ps(r2, _mm256_broadcast_ss(&lowlimit));
 
 				r1 = _mm256_permute_ps(WienerFactors4, _MM_SHUFFLE(1, 1, 0, 0));
 				r2 = _mm256_permute_ps(WienerFactord4, _MM_SHUFFLE(3, 3, 2, 2));
@@ -185,8 +185,8 @@ void PatternFilter::ApplyPattern3D2_degrid_AVX2() noexcept
 				r1 = _mm256_div_ps(r1, psds4);
 				r2 = _mm256_div_ps(r2, psdd4);
 
-				__m256 WienerFactors4 = _mm256_max_ps(r1, _mm256_broadcast_ss(&lowlimit));
-				__m256 WienerFactord4 = _mm256_max_ps(r2, _mm256_broadcast_ss(&lowlimit));
+				const __m256 WienerFactors4 = _mm256_max_ps(r1, _mm256_broadcast_ss(&lowlimit));
+				const __m256 WienerFactord4 = _mm256_max_ps(r2, _mm256_broadcast_ss(&lowlimit));
 
 				r1 = _mm256_permute_ps(WienerFactors4, _MM_SHUFFLE(1, 1, 0, 0));
 				r2 = _mm256_permute_ps(WienerFactord4, _MM_SHUFFLE(3, 3, 2, 2));
@@ -231,7 +231,7 @@ void PatternFilter::ApplyPattern3D3_AVX2() noexcept
 			for (int w = 0; w < outwidth; w = w + 4) // 
 			{
 				__m256 r1 = _mm256_load_ps(outprev[w]);
-				__m256 pn4 = _mm256_add_ps(r1, r2); //r,i,r,i
+				const __m256 pn4 = _mm256_add_ps(r1, r2); //r,i,r,i
 				__m256 fc4 = _mm256_add_ps(pn4, r3); //r,i,r,i
 
 				__m256 d4 = _mm256_sub_ps(r1, r2); //r,i,r,i!
@@ -244,7 +244,7 @@ void PatternFilter::ApplyPattern3D3_AVX2() noexcept
 				__m256 fn4 = _mm256_sub_ps(r1, d4);
 
 				__m256 psdc4 = _mm256_mul_ps(fc4, fc4);
-				__m256 psdp4 = _mm256_mul_ps(fp4, fp4);
+				const __m256 psdp4 = _mm256_mul_ps(fp4, fp4);
 				__m256 psdn4 = _mm256_mul_ps(fn4, fn4);
 
 				psdc4 = _mm256_hadd_ps(psdc4, psdp4);
@@ -305,7 +305,7 @@ void PatternFilter::ApplyPattern3D3_degrid_AVX2() noexcept
 				__m256 gridcorrection = _mm256_mul_ps(gridfraction8, _mm256_load_ps(gridsample[w])); //gridcorrection
 				gridcorrection = _mm256_mul_ps(gridcorrection, _mm256_set1_ps(3.0f));
 				__m256 r1 = _mm256_load_ps(outprev[w]);
-				__m256 pn4 = _mm256_add_ps(r1, r2); //r,i,r,i
+				const __m256 pn4 = _mm256_add_ps(r1, r2); //r,i,r,i
 				__m256 fc4 = _mm256_add_ps(pn4, r3); //r,i,r,i
 				fc4 = _mm256_sub_ps(fc4, gridcorrection);
 
@@ -318,7 +318,7 @@ void PatternFilter::ApplyPattern3D3_degrid_AVX2() noexcept
 				__m256 fn4 = _mm256_sub_ps(r1, d4);
 
 				__m256 psdc4 = _mm256_mul_ps(fc4, fc4);
-				__m256 psdp4 = _mm256_mul_ps(fp4, fp4);
+				const __m256 psdp4 = _mm256_mul_ps(fp4, fp4);
 				__m256 psdn4 = _mm256_mul_ps(fn4, fn4);
 
 				psdc4 = _mm256_hadd_ps(psdc4, psdp4);
@@ -477,7 +477,7 @@ void PatternFilter::ApplyPattern3D4_degrid_AVX2() noexcept
 			__m256 r4 = _mm256_load_ps(&outnext[0][0]);
 			for (int w = 0; w < outwidth; w = w + 4)
 			{
-				__m256 gridcorrection = _mm256_mul_ps(_mm256_mul_ps(_mm256_load_ps(&gridsample[w][0]), gridfraction8), _mm256_set1_ps(4));
+				const __m256 gridcorrection = _mm256_mul_ps(_mm256_mul_ps(_mm256_load_ps(&gridsample[w][0]), gridfraction8), _mm256_set1_ps(4));
 				__m256 r1 = _mm256_load_ps(&outprev2[w][0]);
 				__m256 r2 = _mm256_load_ps(&outprev[w][0]);
 				//outcur[w][0] - outnext[w][1] - outprev2[w][0] + outprev[w][1]
@@ -589,7 +589,7 @@ void PatternFilter::ApplyPattern3D5_AVX2() noexcept
 			{
 				__m256 r1 = _mm256_load_ps(outprev2[w]);
 				__m256 r2 = _mm256_load_ps(outnext2[w]);
-				__m256 r5 = _mm256_load_ps(outcur[w]);
+				const __m256 r5 = _mm256_load_ps(outcur[w]);
 
 				__m256 r6 = _mm256_add_ps(_mm256_mul_ps(r1, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f)), r2); //sum, dif, sum, dif
 				__m256 r7 = _mm256_add_ps(r3, _mm256_mul_ps(r4, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
@@ -608,8 +608,8 @@ void PatternFilter::ApplyPattern3D5_AVX2() noexcept
 				r7 = _mm256_add_ps(r6, r7);
 				r7 = _mm256_add_ps(r7, _mm256_andnot_ps(_mm256_set_ps(0.0f, ~0, 0.0f, ~0, 0.0f, ~0, 0.0f, ~0), r5)); //bitwise AND would be faster, but how to use it?
 				r6 = _mm256_permutevar_ps(r7, _mm256_set_epi32(0, 3, 0, 1, 0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m256 fp2i = _mm256_add_ps(r7, r6);
-				__m256 fn2i = _mm256_sub_ps(r6, r7);
+				const __m256 fp2i = _mm256_add_ps(r7, r6);
+				const __m256 fn2i = _mm256_sub_ps(r6, r7);
 
 				r6 = _mm256_fmadd_ps(r2, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r1); //sum, dif, sum, dif
 				r7 = _mm256_fmadd_ps(r4, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r3); //sum, dif, sum, dif
@@ -628,8 +628,8 @@ void PatternFilter::ApplyPattern3D5_AVX2() noexcept
 				r7 = _mm256_add_ps(r6, r7);
 				r7 = _mm256_add_ps(r7, _mm256_andnot_ps(_mm256_set_ps(0.0f, ~0, 0.0f, ~0, 0.0f, ~0, 0.0f, ~0), r5)); //bitwise AND would be faster, but how to use it?
 				r6 = _mm256_permutevar_ps(r7, _mm256_set_epi32(0, 3, 0, 1, 0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m256 fpi = _mm256_add_ps(r7, r6);
-				__m256 fni = _mm256_sub_ps(r6, r7);
+				const __m256 fpi = _mm256_add_ps(r7, r6);
+				const __m256 fni = _mm256_sub_ps(r6, r7);
 
 				r6 = _mm256_add_ps(r1, r2);
 				r7 = _mm256_add_ps(r3, r4);
@@ -747,7 +747,7 @@ void PatternFilter::ApplyPattern3D5_degrid_AVX2() noexcept
 				gridcorrection = _mm256_mul_ps(gridcorrection, _mm256_set1_ps(5));
 				__m256 r1 = _mm256_load_ps(outprev2[w]);
 				__m256 r2 = _mm256_load_ps(outnext2[w]);
-				__m256 r5 = _mm256_load_ps(outcur[w]);
+				const __m256 r5 = _mm256_load_ps(outcur[w]);
 
 				__m256 r6 = _mm256_add_ps(_mm256_mul_ps(r1, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f)), r2); //sum, dif, sum, dif
 				__m256 r7 = _mm256_add_ps(r3, _mm256_mul_ps(r4, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
@@ -766,8 +766,8 @@ void PatternFilter::ApplyPattern3D5_degrid_AVX2() noexcept
 				r7 = _mm256_add_ps(r6, r7);
 				r7 = _mm256_add_ps(r7, _mm256_andnot_ps(_mm256_set_ps(0.0f, ~0, 0.0f, ~0, 0.0f, ~0, 0.0f, ~0), r5)); //bitwise AND would be faster, but how to use it?
 				r6 = _mm256_permutevar_ps(r7, _mm256_set_epi32(0, 3, 0, 1, 0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m256 fp2i = _mm256_add_ps(r7, r6);
-				__m256 fn2i = _mm256_sub_ps(r6, r7);
+				const __m256 fp2i = _mm256_add_ps(r7, r6);
+				const __m256 fn2i = _mm256_sub_ps(r6, r7);
 
 				r6 = _mm256_fmadd_ps(r2, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r1); //sum, dif, sum, dif
 				r7 = _mm256_fmadd_ps(r4, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r3); //sum, dif, sum, dif
@@ -786,8 +786,8 @@ void PatternFilter::ApplyPattern3D5_degrid_AVX2() noexcept
 				r7 = _mm256_add_ps(r6, r7);
 				r7 = _mm256_add_ps(r7, _mm256_andnot_ps(_mm256_set_ps(0.0f, ~0, 0.0f, ~0, 0.0f, ~0, 0.0f, ~0), r5)); //bitwise AND would be faster, but how to use it?
 				r6 = _mm256_permutevar_ps(r7, _mm256_set_epi32(0, 3, 0, 1, 0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m256 fpi = _mm256_add_ps(r7, r6);
-				__m256 fni = _mm256_sub_ps(r6, r7);
+				const __m256 fpi = _mm256_add_ps(r7, r6);
+				const __m256 fni = _mm256_sub_ps(r6, r7);
 
 				r6 = _mm256_add_ps(r1, r2);
 				r7 = _mm256_add_ps(r3, r4);
@@ -898,13 +898,13 @@ void FindPatternBlock_AVX2(fftwf_complex *outcur0, int outwidth, int outpitch, i
 		{
 			outcur = outcur0 + nox * by*bh*outpitch + bx * bh*outpitch;
 			sigmaSquaredcur = 0;
-			float gcur = degrid * outcur[0][0] / gridsample[0][0]; // grid (windowing) correction factor
+			const float gcur = degrid * outcur[0][0] / gridsample[0][0]; // grid (windowing) correction factor
 			for (int h = 0; h < bh; h++)
 			{
 				for (int w = 0; w < outwidth; w = w + 4)
 				{
 					__m256 grid = _mm256_load_ps(gridsample[w]);
-					__m256 cur = _mm256_load_ps(outcur[w]);
+					const __m256 cur = _mm256_load_ps(outcur[w]);
 					grid = _mm256_mul_ps(grid, _mm256_broadcast_ss(&gcur));
 					grid = _mm256_sub_ps(cur, grid);
 					grid = _mm256_mul_ps(grid, grid);

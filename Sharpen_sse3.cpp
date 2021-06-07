@@ -43,15 +43,15 @@ void SharpenFilter::Sharpen_SSE3() noexcept
 			{
 				for (int w = 0; w < outwidth; w = w + 2)
 				{
-					__m128 cur = _mm_load_ps(outcur[w]);
-					__m128 r1 = _mm_mul_ps(cur, cur);
-					__m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, psd2, psd1, psd2
+					const __m128 cur = _mm_load_ps(outcur[w]);
+					const __m128 r1 = _mm_mul_ps(cur, cur);
+					const __m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, psd2, psd1, psd2
 
-					__m128 sharp4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
+					const __m128 sharp4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
 					__m128 r2 = _mm_mul_ps(sharpen4, sharp4);
 					__m128 r3 = _mm_mul_ps(psd4, sigmaSquaredSharpenMax4);
 					__m128 r4 = _mm_add_ps(psd4, sigmaSquaredSharpenMin4);
-					__m128 r5 = _mm_add_ps(psd4, sigmaSquaredSharpenMax4);
+					const __m128 r5 = _mm_add_ps(psd4, sigmaSquaredSharpenMax4);
 					r4 = _mm_mul_ps(r4, r5);
 					r3 = _mm_div_ps(r3, r4);
 					r3 = _mm_sqrt_ps(r3);
@@ -80,9 +80,9 @@ void SharpenFilter::Sharpen_SSE3() noexcept
 			{
 				for (int w = 0; w < outwidth; w = w + 2)
 				{
-					__m128 cur = _mm_load_ps(outcur[w]);
-					__m128 r1 = _mm_mul_ps(cur, cur);
-					__m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, -, psd2, -
+					const __m128 cur = _mm_load_ps(outcur[w]);
+					const __m128 r1 = _mm_mul_ps(cur, cur);
+					const __m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, -, psd2, -
 
 					__m128 r3 = _mm_add_ps(psd4, ht2n4);
 					__m128 r4 = _mm_mul_ps(psd4, dehalo4);
@@ -90,7 +90,7 @@ void SharpenFilter::Sharpen_SSE3() noexcept
 					r4 = _mm_add_ps(r3, r4);
 					r3 = _mm_div_ps(r3, r4);
 
-					__m128 r2 = _mm_shuffle_ps(r3, r3, _MM_SHUFFLE(1, 1, 0, 0));
+					const __m128 r2 = _mm_shuffle_ps(r3, r3, _MM_SHUFFLE(1, 1, 0, 0));
 					_mm_store_ps(outcur[w], _mm_mul_ps(r2, cur));
 				}
 				_mm_prefetch((const char*)(outcur + outpitch), _MM_HINT_T0);
@@ -117,22 +117,22 @@ void SharpenFilter::Sharpen_SSE3() noexcept
 			{
 				for (int w = 0; w < outwidth; w = w + 2)
 				{
-					__m128 cur = _mm_load_ps(outcur[w]);
-					__m128 r1 = _mm_mul_ps(cur, cur);
-					__m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, -, psd2, -
+					const __m128 cur = _mm_load_ps(outcur[w]);
+					const __m128 r1 = _mm_mul_ps(cur, cur);
+					const __m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, -, psd2, -
 
-					__m128 sharp4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
+					const __m128 sharp4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
 					__m128 r2 = _mm_mul_ps(sharpen4, sharp4);
 					__m128 r3 = _mm_mul_ps(psd4, sigmaSquaredSharpenMax4);
 					__m128 r4 = _mm_add_ps(psd4, sigmaSquaredSharpenMin4);
-					__m128 r5 = _mm_add_ps(psd4, sigmaSquaredSharpenMax4);
+					const __m128 r5 = _mm_add_ps(psd4, sigmaSquaredSharpenMax4);
 					r4 = _mm_mul_ps(r4, r5);
 					r3 = _mm_div_ps(r3, r4);
 					r3 = _mm_sqrt_ps(r3);
 					r2 = _mm_mul_ps(r2, r3);
 					r2 = _mm_add_ps(r2, _mm_set1_ps(1.0f));
 
-					__m128 wdehalo4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*)&wdehalo[w]);
+					const __m128 wdehalo4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*)&wdehalo[w]);
 					r3 = _mm_add_ps(psd4, ht2n4);
 					r4 = _mm_mul_ps(psd4, dehalo4);
 					r4 = _mm_mul_ps(r4, wdehalo4);
@@ -177,14 +177,14 @@ void SharpenFilter::Sharpen_degrid_SSE3() noexcept
 					const __m128 gridcorrection = _mm_mul_ps(gridfraction4, _mm_load_ps(gridsample[w])); //gridcorrection
 					__m128 cur = _mm_load_ps(outcur[w]);
 					cur = _mm_sub_ps(cur, gridcorrection);
-					__m128 r1 = _mm_mul_ps(cur, cur);
-					__m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, -, psd2, -
+					const __m128 r1 = _mm_mul_ps(cur, cur);
+					const __m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, -, psd2, -
 
-					__m128 sharp4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
+					const __m128 sharp4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
 					__m128 r2 = _mm_mul_ps(sharpen4, sharp4);
 					__m128 r3 = _mm_mul_ps(psd4, sigmaSquaredSharpenMax4);
 					__m128 r4 = _mm_add_ps(psd4, sigmaSquaredSharpenMin4);
-					__m128 r5 = _mm_add_ps(psd4, sigmaSquaredSharpenMax4);
+					const __m128 r5 = _mm_add_ps(psd4, sigmaSquaredSharpenMax4);
 					r4 = _mm_mul_ps(r4, r5);
 					r3 = _mm_div_ps(r3, r4);
 					r3 = _mm_sqrt_ps(r3);
@@ -222,10 +222,10 @@ void SharpenFilter::Sharpen_degrid_SSE3() noexcept
 					const __m128 gridcorrection = _mm_mul_ps(gridfraction4, _mm_load_ps(gridsample[w])); //gridcorrection
 					__m128 cur = _mm_load_ps(outcur[w]);
 					cur = _mm_sub_ps(cur, gridcorrection);
-					__m128 r1 = _mm_mul_ps(cur, cur);
-					__m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, -, psd2, -
+					const __m128 r1 = _mm_mul_ps(cur, cur);
+					const __m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, -, psd2, -
 
-					__m128 r3 = _mm_add_ps(psd4, ht2n4);
+					const __m128 r3 = _mm_add_ps(psd4, ht2n4);
 					__m128 r4 = _mm_mul_ps(psd4, dehalo4);
 					r4 = _mm_mul_ps(r4, _mm_loadl_pi(_mm_setzero_ps(), (__m64*)&wdehalo[w]));
 					r4 = _mm_add_ps(r3, r4);
@@ -268,21 +268,21 @@ void SharpenFilter::Sharpen_degrid_SSE3() noexcept
 					const __m128 gridcorrection = _mm_mul_ps(gridfraction4, _mm_load_ps(gridsample[w])); //gridcorrection
 					__m128 cur = _mm_load_ps(outcur[w]);
 					cur = _mm_sub_ps(cur, gridcorrection);
-					__m128 r1 = _mm_mul_ps(cur, cur);
-					__m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, -, psd2, -
+					const __m128 r1 = _mm_mul_ps(cur, cur);
+					const __m128 psd4 = _mm_hadd_ps(r1, r1); //psd1, -, psd2, -
 
-					__m128 sharp4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
+					const __m128 sharp4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &wsharpen[w]);
 					__m128 r2 = _mm_mul_ps(sharpen4, sharp4);
 					__m128 r3 = _mm_mul_ps(psd4, sigmaSquaredSharpenMax4);
 					__m128 r4 = _mm_add_ps(psd4, sigmaSquaredSharpenMin4);
-					__m128 r5 = _mm_add_ps(psd4, sigmaSquaredSharpenMax4);
+					const __m128 r5 = _mm_add_ps(psd4, sigmaSquaredSharpenMax4);
 					r4 = _mm_mul_ps(r4, r5);
 					r3 = _mm_div_ps(r3, r4);
 					r3 = _mm_sqrt_ps(r3);
 					r2 = _mm_mul_ps(r2, r3);
 					r2 = _mm_add_ps(r2, _mm_set1_ps(1.0f));
 
-					__m128 wdehalo4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*)&wdehalo[w]);
+					const __m128 wdehalo4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*)&wdehalo[w]);
 					r3 = _mm_add_ps(psd4, ht2n4);
 					r4 = _mm_mul_ps(psd4, dehalo4);
 					r4 = _mm_mul_ps(r4, wdehalo4);

@@ -23,22 +23,6 @@
 #include "Kalman.h"
 #include "enums.h"
 
-DWORD WINAPI ApplyKalman_MT(LPVOID lpParam)
-{
-	KalmanFilter* in = (KalmanFilter*)lpParam;
-
-	in->ApplyKalman(*in);
-	return 0;
-}
-
-DWORD WINAPI ApplyKalmanPattern_MT(LPVOID lpParam)
-{
-	KalmanFilter* in = (KalmanFilter*)lpParam;
-
-	in->ApplyKalmanPattern(*in);
-	return 0;
-}
-
 KalmanFilter::KalmanFilter(fftwf_complex *covar_in, fftwf_complex *covarProcess_in, int start_block,
 	int blocks, int outwidth, int outpitch, int bh, int CPUFlags, float kratio2) :
 	covar_in(covar_in), covarProcess_in(covarProcess_in), start_block(start_block),

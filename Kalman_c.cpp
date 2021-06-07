@@ -90,7 +90,7 @@ void KalmanFilter::ApplyKalman_C() noexcept
 	// return result in outLast
 	int w(0);
 	fftwf_complex *__restrict covar = covar_in, *__restrict covarProcess = covarProcess_in;
-	float sigmaSquaredMotionNormed = covarNoiseNormed * kratio2;
+	const float sigmaSquaredMotionNormed = covarNoiseNormed * kratio2;
 
 	for (int block = start_block; block < blocks; block++)
 	{

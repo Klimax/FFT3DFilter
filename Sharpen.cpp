@@ -23,14 +23,6 @@
 #include "Sharpen.h"
 #include "enums.h"
 
-DWORD WINAPI Sharpen_MT(LPVOID lpParam)
-{
-	SharpenFilter* in = (SharpenFilter*)lpParam;
-
-	in->Sharpen(*in);
-	return 0;
-}
-
 SharpenFilter::SharpenFilter(int start_block, int blocks, int CPUFlags, int outwidth, int outpitch, int bh, fftwf_complex *gridsample,
 	float sharpen, float sigmaSquaredSharpenMin, float sigmaSquaredSharpenMax, float *wsharpen, float dehalo, float *wdehalo, float ht2n, float degrid) :
 	start_block(start_block), blocks(blocks), CPUFlags(CPUFlags), outwidth(outwidth), outpitch(outpitch), bh(bh), gridsample(gridsample),

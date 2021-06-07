@@ -79,6 +79,10 @@ void Instrumentation::SaveData()
 		TempString += L"\\";
 	}
 
+#ifdef FFTW_ATOM
+	maxinstruction += L"-atom";
+#endif
+
 	file.open(TempString + L"perf-" + maxinstruction + L".csv", std::ios::out | std::ios::trunc);
 
 	file << "Frame";

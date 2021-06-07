@@ -84,6 +84,7 @@ class FFT3DFilter : public GenericVideoFilter {
 
 	// additional parameterss
 	float *in;
+	unsigned char* MemoryPages;
 	fftwf_complex *out, *outprev, *outnext, *outtemp, *outprev2, *outnext2;
 	fftwf_complex *outrez, *gridsample; //v1.8
 	fftwf_plan plan, planinv, plan1;
@@ -195,7 +196,7 @@ class FFT3DFilter : public GenericVideoFilter {
 
 	void InitFunctors();
 	void DetectFeatures(IScriptEnvironment* env);
-	void GenWindows();
+	void GenWindows() noexcept;
 
 public:
 	// This defines that these functions are present in your class.

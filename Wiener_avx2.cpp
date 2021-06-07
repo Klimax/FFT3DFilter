@@ -41,7 +41,7 @@ void WienerFilter::ApplyWiener2D_AVX2() noexcept
 					__m256 r3 = _mm256_mul_ps(r1, r1);
 					r3 = _mm256_hadd_ps(r3, r3);
 					r3 = _mm256_add_ps(r3, _mm256_set1_ps(1e-15f));
-					__m256 r2 = _mm256_sub_ps(r3, _mm256_set1_ps(sigmaSquaredNoiseNormed));
+					const __m256 r2 = _mm256_sub_ps(r3, _mm256_set1_ps(sigmaSquaredNoiseNormed));
 					r3 = _mm256_div_ps(r2, r3);
 					r3 = _mm256_max_ps(r3, _mm256_set1_ps(lowlimit));
 					r3 = _mm256_unpacklo_ps(r3, r3);
@@ -71,14 +71,14 @@ void WienerFilter::ApplyWiener2D_AVX2() noexcept
 					__m256 r7 = _mm256_mul_ps(_mm256_set1_ps(sharpen), _mm256_broadcast_ps((__m128*)&wsharpen[w]));
 					__m256 r4 = _mm256_mul_ps(psd8, _mm256_set1_ps(sigmaSquaredSharpenMax));
 					__m256 r5 = _mm256_add_ps(psd8, _mm256_set1_ps(sigmaSquaredSharpenMin));
-					__m256 r6 = _mm256_add_ps(psd8, _mm256_set1_ps(sigmaSquaredSharpenMax));
+					const __m256 r6 = _mm256_add_ps(psd8, _mm256_set1_ps(sigmaSquaredSharpenMax));
 					r5 = _mm256_mul_ps(r5, r6);
 					r4 = _mm256_div_ps(r4, r5);
 					r4 = _mm256_sqrt_ps(r4);
 					r7 = _mm256_permutevar_ps(r7, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0));
 					r4 = _mm256_mul_ps(r4, r7);
 
-					__m256 r2 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
+					const __m256 r2 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
 					r3 = _mm256_div_ps(r2, psd8);
 					r3 = _mm256_max_ps(r3, _mm256_set1_ps(lowlimit));
 
@@ -112,12 +112,12 @@ void WienerFilter::ApplyWiener2D_AVX2() noexcept
 
 					__m256 r5 = _mm256_add_ps(psd8, _mm256_set1_ps(ht2n));
 					__m256 r6 = _mm256_mul_ps(psd8, _mm256_set1_ps(dehalo));
-					__m256 r7 = _mm256_broadcast_ps((__m128*)&wdehalo[w]);
+					const __m256 r7 = _mm256_broadcast_ps((__m128*)&wdehalo[w]);
 					r6 = _mm256_mul_ps(r6, _mm256_permutevar_ps(r7, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0)));
 					r6 = _mm256_add_ps(r5, r6);
 					r5 = _mm256_div_ps(r5, r6);
 
-					__m256 r2 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
+					const __m256 r2 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
 					r3 = _mm256_div_ps(r2, psd8);
 					r3 = _mm256_max_ps(r3, _mm256_set1_ps(lowlimit));
 
@@ -158,20 +158,20 @@ void WienerFilter::ApplyWiener2D_AVX2() noexcept
 					r6 = _mm256_sqrt_ps(r8);
 
 					r5 = _mm256_permutevar_ps(r5, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0));
-					__m256 sharp8 = _mm256_mul_ps(r5, r6);
+					const __m256 sharp8 = _mm256_mul_ps(r5, r6);
 
 					r5 = _mm256_add_ps(psd8, _mm256_set1_ps(ht2n));
 					r6 = _mm256_mul_ps(psd8, _mm256_set1_ps(dehalo));
 					r7 = _mm256_broadcast_ps((__m128*)&wdehalo[w]);
 					r6 = _mm256_mul_ps(r6, _mm256_permutevar_ps(r7, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0)));
 					r6 = _mm256_add_ps(r5, r6);
-					__m256 dehalo8 = _mm256_div_ps(r5, r6);
+					const __m256 dehalo8 = _mm256_div_ps(r5, r6);
 
 					r5 = _mm256_mul_ps(sharp8, dehalo8);
 
 					r5 = _mm256_add_ps(_mm256_set1_ps(1.0f), r5);
 
-					__m256 r2 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
+					const __m256 r2 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
 					r3 = _mm256_div_ps(r2, psd8);
 					r3 = _mm256_max_ps(r3, _mm256_set1_ps(lowlimit));
 
@@ -207,11 +207,11 @@ void WienerFilter::ApplyWiener2D_degrid_AVX2() noexcept
 				{
 					const __m256 gridcorrection = _mm256_mul_ps(gridfraction8, _mm256_load_ps(gridsample[w])); //gridcorrection
 					__m256 r1 = _mm256_load_ps(outcur[w]);
-					__m256 r4 = _mm256_sub_ps(r1, gridcorrection); //corrected
+					const __m256 r4 = _mm256_sub_ps(r1, gridcorrection); //corrected
 					__m256 r3 = _mm256_mul_ps(r4, r4); //corrected^2
 					r3 = _mm256_hadd_ps(r3, r3); //psd
 					r3 = _mm256_add_ps(r3, _mm256_set1_ps(1e-15f)); //psd
-					__m256 r2 = _mm256_sub_ps(r3, _mm256_set1_ps(sigmaSquaredNoiseNormed));
+					const __m256 r2 = _mm256_sub_ps(r3, _mm256_set1_ps(sigmaSquaredNoiseNormed));
 					r3 = _mm256_div_ps(r2, r3);
 					r3 = _mm256_max_ps(r3, _mm256_set1_ps(lowlimit)); //wienerfactor
 					r3 = _mm256_unpacklo_ps(r3, r3);
@@ -238,7 +238,7 @@ void WienerFilter::ApplyWiener2D_degrid_AVX2() noexcept
 				for (int w = 0; w < outwidth; w = w + 4) // not skip first
 				{
 					const __m256 gridcorrection = _mm256_mul_ps(gridfraction8, _mm256_load_ps(gridsample[w])); //gridcorrection
-					__m256 r4 = _mm256_sub_ps(r1, gridcorrection); //corrected
+					const __m256 r4 = _mm256_sub_ps(r1, gridcorrection); //corrected
 					__m256 r3 = _mm256_mul_ps(r4, r4); //corrected^2
 					r3 = _mm256_hadd_ps(r3, r3); //psd
 					__m256 psd8 = _mm256_add_ps(r3, _mm256_set1_ps(1e-15f)); //psd [0,2]
@@ -287,18 +287,18 @@ void WienerFilter::ApplyWiener2D_degrid_AVX2() noexcept
 				{
 					const __m256 gridcorrection = _mm256_mul_ps(gridfraction8, _mm256_load_ps(gridsample[w])); //gridcorrection
 					__m256 r1 = _mm256_load_ps(outcur[w]);
-					__m256 r4 = _mm256_sub_ps(r1, gridcorrection); //corrected
+					const __m256 r4 = _mm256_sub_ps(r1, gridcorrection); //corrected
 					__m256 r3 = _mm256_mul_ps(r4, r4); //corrected^2
 					r3 = _mm256_hadd_ps(r3, r3); //psd
 					__m256 psd8 = _mm256_add_ps(r3, _mm256_set1_ps(1e-15f)); //psd [0,1]
 					psd8 = _mm256_permutevar_ps(psd8, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0));
-					__m256 r2 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
+					const __m256 r2 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
 					r3 = _mm256_div_ps(r2, psd8);
 					__m256 wienerfactor8 = _mm256_max_ps(r3, _mm256_set1_ps(lowlimit)); //wienerfactor
 
 					__m256 r5 = _mm256_add_ps(psd8, _mm256_set1_ps(ht2n));
 					__m256 r6 = _mm256_mul_ps(psd8, _mm256_set1_ps(dehalo));
-					__m256 r7 = _mm256_broadcast_ps((__m128*)&wdehalo[w]);
+					const __m256 r7 = _mm256_broadcast_ps((__m128*)&wdehalo[w]);
 					r6 = _mm256_fmadd_ps(r6, _mm256_permutevar_ps(r7, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0)), r5);
 
 					r5 = _mm256_div_ps(r5, r6);
@@ -330,12 +330,12 @@ void WienerFilter::ApplyWiener2D_degrid_AVX2() noexcept
 				{
 					const __m256 gridcorrection = _mm256_mul_ps(gridfraction8, _mm256_load_ps(gridsample[w])); //gridcorrection
 					__m256 r1 = _mm256_load_ps(outcur[w]);
-					__m256 r4 = _mm256_sub_ps(r1, gridcorrection); //corrected
+					const __m256 r4 = _mm256_sub_ps(r1, gridcorrection); //corrected
 					__m256 r3 = _mm256_mul_ps(r4, r4); //corrected^2
 					r3 = _mm256_hadd_ps(r3, r3); //psd
 					__m256 psd8 = _mm256_add_ps(r3, _mm256_set1_ps(1e-15f)); //psd [0,2]
 					psd8 = _mm256_permutevar_ps(psd8, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0));
-					__m256 r2 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
+					const __m256 r2 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
 					r3 = _mm256_div_ps(r2, psd8);
 					__m256 wienerfactor8 = _mm256_max_ps(r3, _mm256_set1_ps(lowlimit)); //wienerfactor
 
@@ -349,13 +349,13 @@ void WienerFilter::ApplyWiener2D_degrid_AVX2() noexcept
 					r6 = _mm256_sqrt_ps(r8);
 
 					r5 = _mm256_permutevar_ps(r5, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0));
-					__m256 sharp8 = _mm256_mul_ps(r5, r6);
+					const __m256 sharp8 = _mm256_mul_ps(r5, r6);
 
 					r5 = _mm256_add_ps(psd8, _mm256_set1_ps(ht2n));
 					r6 = _mm256_mul_ps(psd8, _mm256_set1_ps(dehalo));
 					r7 = _mm256_broadcast_ps((__m128*)&wdehalo[w]);
 					r6 = _mm256_fmadd_ps(r6, _mm256_permutevar_ps(r7, _mm256_set_epi32(3, 3, 2, 2, 1, 1, 0, 0)), r5);
-					__m256 dehalo8 = _mm256_div_ps(r5, r6);
+					const __m256 dehalo8 = _mm256_div_ps(r5, r6);
 
 					r5 = _mm256_mul_ps(sharp8, dehalo8);
 					r5 = _mm256_add_ps(_mm256_set1_ps(1.0f), r5);
@@ -405,7 +405,7 @@ void WienerFilter::ApplyWiener3D2_AVX2() noexcept
 				r1 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
 				r1 = _mm256_div_ps(r1, psd8);
 
-				__m256 WienerFactor8 = _mm256_max_ps(r1, _mm256_set1_ps(lowlimit));
+				const __m256 WienerFactor8 = _mm256_max_ps(r1, _mm256_set1_ps(lowlimit));
 
 				r1 = _mm256_permute_ps(WienerFactor8, _MM_SHUFFLE(1, 1, 0, 0));
 				r2 = _mm256_permute_ps(WienerFactor8, _MM_SHUFFLE(3, 3, 2, 2));
@@ -455,7 +455,7 @@ void WienerFilter::ApplyWiener3D2_degrid_AVX2() noexcept
 				r1 = _mm256_sub_ps(psd8, _mm256_set1_ps(sigmaSquaredNoiseNormed));
 				r1 = _mm256_div_ps(r1, psd8);
 
-				__m256 WienerFactor8 = _mm256_max_ps(r1, _mm256_set1_ps(lowlimit));
+				const __m256 WienerFactor8 = _mm256_max_ps(r1, _mm256_set1_ps(lowlimit));
 
 				r1 = _mm256_permute_ps(WienerFactor8, _MM_SHUFFLE(1, 1, 0, 0));
 				r2 = _mm256_permute_ps(WienerFactor8, _MM_SHUFFLE(3, 3, 2, 2));
@@ -496,7 +496,7 @@ void WienerFilter::ApplyWiener3D3_AVX2() noexcept
 			for (int w = 0; w < outwidth; w = w + 4) // 
 			{
 				__m256 r1 = _mm256_load_ps(outprev[w]);
-				__m256 pn4 = _mm256_add_ps(r1, r2); //r,i,r,i
+				const __m256 pn4 = _mm256_add_ps(r1, r2); //r,i,r,i
 				__m256 fc4 = _mm256_add_ps(pn4, r3); //r,i,r,i
 
 				__m256 d4 = _mm256_sub_ps(r1, r2); //r,i,r,i!
@@ -509,7 +509,7 @@ void WienerFilter::ApplyWiener3D3_AVX2() noexcept
 				__m256 fn4 = _mm256_sub_ps(r1, d4);
 
 				__m256 psdc4 = _mm256_mul_ps(fc4, fc4);
-				__m256 psdp4 = _mm256_mul_ps(fp4, fp4);
+				const __m256 psdp4 = _mm256_mul_ps(fp4, fp4);
 				__m256 psdn4 = _mm256_mul_ps(fn4, fn4);
 
 				psdc4 = _mm256_hadd_ps(psdc4, psdp4);
@@ -567,7 +567,7 @@ void WienerFilter::ApplyWiener3D3_degrid_AVX2() noexcept
 				__m256 gridcorrection = _mm256_mul_ps(gridfraction8, _mm256_load_ps(gridsample[w])); //gridcorrection
 				gridcorrection = _mm256_mul_ps(gridcorrection, _mm256_set1_ps(3.0f));
 				__m256 r1 = _mm256_load_ps(outprev[w]);
-				__m256 pn4 = _mm256_add_ps(r1, r2); //r,i,r,i
+				const __m256 pn4 = _mm256_add_ps(r1, r2); //r,i,r,i
 				__m256 fc4 = _mm256_add_ps(pn4, r3); //r,i,r,i
 				fc4 = _mm256_sub_ps(fc4, gridcorrection);
 
@@ -580,7 +580,7 @@ void WienerFilter::ApplyWiener3D3_degrid_AVX2() noexcept
 				__m256 fn4 = _mm256_sub_ps(r1, d4);
 
 				__m256 psdc4 = _mm256_mul_ps(fc4, fc4);
-				__m256 psdp4 = _mm256_mul_ps(fp4, fp4);
+				const __m256 psdp4 = _mm256_mul_ps(fp4, fp4);
 				__m256 psdn4 = _mm256_mul_ps(fn4, fn4);
 
 				psdc4 = _mm256_hadd_ps(psdc4, psdp4);
@@ -852,7 +852,7 @@ void WienerFilter::ApplyWiener3D5_AVX2() noexcept
 			{
 				__m256 r1 = _mm256_load_ps(outprev2[w]);
 				__m256 r2 = _mm256_load_ps(outnext2[w]);
-				__m256 r5 = _mm256_load_ps(outcur[w]);
+				const __m256 r5 = _mm256_load_ps(outcur[w]);
 
 				__m256 r6 = _mm256_fmadd_ps(r1, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r2); //sum, dif, sum, dif
 				__m256 r7 = _mm256_fmadd_ps(r4, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r3); //sum, dif, sum, dif
@@ -871,8 +871,8 @@ void WienerFilter::ApplyWiener3D5_AVX2() noexcept
 				r7 = _mm256_add_ps(r6, r7);
 				r7 = _mm256_add_ps(r7, _mm256_andnot_ps(_mm256_set_ps(0.0f, ~0, 0.0f, ~0, 0.0f, ~0, 0.0f, ~0), r5));
 				r6 = _mm256_permute_ps(r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m256 fp2i = _mm256_add_ps(r7, r6);
-				__m256 fn2i = _mm256_sub_ps(r6, r7);
+				const __m256 fp2i = _mm256_add_ps(r7, r6);
+				const __m256 fn2i = _mm256_sub_ps(r6, r7);
 
 				r6 = _mm256_fmadd_ps(r2, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r1); //sum, dif, sum, dif
 				r7 = _mm256_fmadd_ps(r4, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r3); //sum, dif, sum, dif
@@ -891,8 +891,8 @@ void WienerFilter::ApplyWiener3D5_AVX2() noexcept
 				r7 = _mm256_add_ps(r6, r7);
 				r7 = _mm256_add_ps(r7, _mm256_andnot_ps(_mm256_set_ps(0.0f, ~0, 0.0f, ~0, 0.0f, ~0, 0.0f, ~0), r5));
 				r6 = _mm256_permute_ps(r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m256 fpi = _mm256_add_ps(r7, r6);
-				__m256 fni = _mm256_sub_ps(r6, r7);
+				const __m256 fpi = _mm256_add_ps(r7, r6);
+				const __m256 fni = _mm256_sub_ps(r6, r7);
 
 				r6 = _mm256_add_ps(r1, r2);
 				r7 = _mm256_add_ps(r3, r4);
@@ -1006,7 +1006,7 @@ void WienerFilter::ApplyWiener3D5_degrid_AVX2() noexcept
 				gridcorrection = _mm256_mul_ps(gridcorrection, _mm256_set1_ps(5));
 				__m256 r1 = _mm256_load_ps(outprev2[w]);
 				__m256 r2 = _mm256_load_ps(outnext2[w]);
-				__m256 r5 = _mm256_load_ps(outcur[w]);
+				const __m256 r5 = _mm256_load_ps(outcur[w]);
 
 				__m256 r6 = _mm256_fmadd_ps(r1, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r2); //sum, dif, sum, dif
 				__m256 r7 = _mm256_fmadd_ps(r4, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r3); //sum, dif, sum, dif
@@ -1025,8 +1025,8 @@ void WienerFilter::ApplyWiener3D5_degrid_AVX2() noexcept
 				r7 = _mm256_add_ps(r6, r7);
 				r7 = _mm256_add_ps(r7, _mm256_andnot_ps(_mm256_set_ps(0.0f, ~0, 0.0f, ~0, 0.0f, ~0, 0.0f, ~0), r5)); //bitwise AND would be faster, but how to use it?
 				r6 = _mm256_permute_ps(r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m256 fp2i = _mm256_add_ps(r7, r6);
-				__m256 fn2i = _mm256_sub_ps(r6, r7);
+				const __m256 fp2i = _mm256_add_ps(r7, r6);
+				const __m256 fn2i = _mm256_sub_ps(r6, r7);
 
 				r6 = _mm256_fmadd_ps(r2, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r1); //sum, dif, sum, dif
 				r7 = _mm256_fmadd_ps(r4, _mm256_set_ps(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), r3); //sum, dif, sum, dif
@@ -1045,8 +1045,8 @@ void WienerFilter::ApplyWiener3D5_degrid_AVX2() noexcept
 				r7 = _mm256_add_ps(r6, r7);
 				r7 = _mm256_add_ps(r7, _mm256_andnot_ps(_mm256_set_ps(0.0f, ~0, 0.0f, ~0, 0.0f, ~0, 0.0f, ~0), r5)); //bitwise AND would be faster, but how to use it?
 				r6 = _mm256_permute_ps(r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m256 fpi = _mm256_add_ps(r7, r6);
-				__m256 fni = _mm256_sub_ps(r6, r7);
+				const __m256 fpi = _mm256_add_ps(r7, r6);
+				const __m256 fni = _mm256_sub_ps(r6, r7);
 
 				r6 = _mm256_add_ps(r1, r2);
 				r7 = _mm256_add_ps(r3, r4);

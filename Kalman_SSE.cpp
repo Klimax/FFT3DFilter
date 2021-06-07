@@ -29,7 +29,7 @@ void KalmanFilter::ApplyKalman_SSE() noexcept
 {
 	// return result in outLast
 	int w(0);
-	float sigmaSquaredMotionNormed = covarNoiseNormed * kratio2;
+	const float sigmaSquaredMotionNormed = covarNoiseNormed * kratio2;
 	const int outwidth2 = outwidth - outwidth % 2;
 	fftwf_complex *__restrict covar = covar_in, *__restrict covarProcess = covarProcess_in;
 	const __m128 covarNoiseNormed4 = _mm_load1_ps(&covarNoiseNormed);
@@ -47,14 +47,14 @@ void KalmanFilter::ApplyKalman_SSE() noexcept
 				__m128 r3 = _mm_sub_ps(cur, last);
 				r3 = _mm_mul_ps(r3, r3);
 				r3 = _mm_cmpgt_ps(r3, _mm_load1_ps(&sigmaSquaredMotionNormed));
-				__m128 mask2 = _mm_or_ps(r3, _mm_shuffle_ps(r3, r3, _MM_SHUFFLE(2, 3, 0, 1))); //positive mask - greater then
-				__m128 mask1 = _mm_andnot_ps(mask2, ff); //negative mask - less then or equal
+				const __m128 mask2 = _mm_or_ps(r3, _mm_shuffle_ps(r3, r3, _MM_SHUFFLE(2, 3, 0, 1))); //positive mask - greater then
+				const __m128 mask1 = _mm_andnot_ps(mask2, ff); //negative mask - less then or equal
 
-				__m128 covar4 = _mm_load_ps(covar[w]);
-				__m128 covarProcess4 = _mm_load_ps(covarProcess[w]);
+				const __m128 covar4 = _mm_load_ps(covar[w]);
+				const __m128 covarProcess4 = _mm_load_ps(covarProcess[w]);
 
-				__m128 sum = _mm_add_ps(covar4, covarProcess4);
-				__m128 gain = _mm_div_ps(sum, _mm_add_ps(sum, covarNoiseNormed4));
+				const __m128 sum = _mm_add_ps(covar4, covarProcess4);
+				const __m128 gain = _mm_div_ps(sum, _mm_add_ps(sum, covarNoiseNormed4));
 
 				r3 = _mm_mul_ps(gain, gain);
 				r3 = _mm_mul_ps(r3, covarNoiseNormed4);
@@ -64,9 +64,9 @@ void KalmanFilter::ApplyKalman_SSE() noexcept
 				r3 = _mm_sub_ps(sum, r3);
 				_mm_store_ps(covar[w], _mm_or_ps(_mm_and_ps(r3, mask1), _mm_and_ps(covarNoiseNormed4, mask2)));
 
-				__m128 r4 = _mm_mul_ps(gain, cur);
+				const __m128 r4 = _mm_mul_ps(gain, cur);
 				r3 = _mm_mul_ps(gain, last);
-				__m128 r2 = _mm_sub_ps(last, r3);
+				const __m128 r2 = _mm_sub_ps(last, r3);
 				r3 = _mm_add_ps(r4, r2);
 				r3 = _mm_or_ps(_mm_and_ps(r3, mask1), _mm_and_ps(cur, mask2));
 				cur = _mm_load_ps(outcur[w + 2]);
@@ -125,10 +125,10 @@ void KalmanFilter::ApplyKalmanPattern_SSE() noexcept
 	// return result in outLast
 	int w(0);
 	fftwf_complex *covar = covar_in, *covarProcess = covarProcess_in;
-	__m128 kratio4 = _mm_load1_ps(&kratio2);
+	const __m128 kratio4 = _mm_load1_ps(&kratio2);
 	const int outwidth2 = outwidth - outwidth % 2;
 
-	__m128 ff = _mm_cmpeq_ps(_mm_set1_ps(1.0f), _mm_set1_ps(1.0f));
+	const __m128 ff = _mm_cmpeq_ps(_mm_set1_ps(1.0f), _mm_set1_ps(1.0f));
 
 	for (int block = start_block; block < blocks; block++)
 	{
@@ -137,21 +137,21 @@ void KalmanFilter::ApplyKalmanPattern_SSE() noexcept
 			for (w = 0; w < outwidth2; w = w + 2)
 			{
 				// use one of possible method for motion detection:
-				__m128 cur = _mm_load_ps(outcur[w]);
-				__m128 last = _mm_load_ps(outLast[w]);
+				const __m128 cur = _mm_load_ps(outcur[w]);
+				const __m128 last = _mm_load_ps(outLast[w]);
 				__m128 r3 = _mm_sub_ps(cur, last);
 				__m128 cnn4 = _mm_loadl_pi(_mm_setzero_ps(), (__m64*) &covarNoiseNormed2[w]);
 				cnn4 = _mm_unpacklo_ps(cnn4, cnn4);
 				r3 = _mm_mul_ps(r3, r3);
 				r3 = _mm_cmpgt_ps(r3, _mm_mul_ps(cnn4, kratio4));
-				__m128 mask2 = _mm_or_ps(r3, _mm_shuffle_ps(r3, r3, _MM_SHUFFLE(2, 3, 0, 1))); //positive mask - greater then
-				__m128 mask1 = _mm_andnot_ps(mask2, ff); //negative mask - less then or equal
+				const __m128 mask2 = _mm_or_ps(r3, _mm_shuffle_ps(r3, r3, _MM_SHUFFLE(2, 3, 0, 1))); //positive mask - greater then
+				const __m128 mask1 = _mm_andnot_ps(mask2, ff); //negative mask - less then or equal
 
-				__m128 covar4 = _mm_load_ps(covar[w]);
-				__m128 covarProcess4 = _mm_load_ps(covarProcess[w]);
+				const __m128 covar4 = _mm_load_ps(covar[w]);
+				const __m128 covarProcess4 = _mm_load_ps(covarProcess[w]);
 
-				__m128 sum = _mm_add_ps(covar4, covarProcess4);
-				__m128 gain = _mm_div_ps(sum, _mm_add_ps(sum, cnn4));
+				const __m128 sum = _mm_add_ps(covar4, covarProcess4);
+				const __m128 gain = _mm_div_ps(sum, _mm_add_ps(sum, cnn4));
 
 				r3 = _mm_mul_ps(gain, gain);
 				r3 = _mm_mul_ps(r3, cnn4);
@@ -161,9 +161,9 @@ void KalmanFilter::ApplyKalmanPattern_SSE() noexcept
 				r3 = _mm_sub_ps(sum, r3);
 				_mm_store_ps(covar[w], _mm_or_ps(_mm_and_ps(r3, mask1), _mm_and_ps(cnn4, mask2)));
 
-				__m128 r4 = _mm_mul_ps(gain, cur);
+				const __m128 r4 = _mm_mul_ps(gain, cur);
 				r3 = _mm_mul_ps(gain, last);
-				__m128 r2 = _mm_sub_ps(last, r3);
+				const __m128 r2 = _mm_sub_ps(last, r3);
 				r3 = _mm_add_ps(r4, r2);
 
 				_mm_store_ps(outLast[w], _mm_or_ps(_mm_and_ps(r3, mask1), _mm_and_ps(cur, mask2)));

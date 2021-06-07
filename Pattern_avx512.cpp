@@ -38,7 +38,7 @@ void PatternFilter::ApplyPattern2D_AVX512() noexcept
 		{
 			for (w = 0; w < outwidth8; w = w + 8)
 			{
-				__m512 cur = _mm512_load_ps(outcur[w]);
+				const __m512 cur = _mm512_load_ps(outcur[w]);
 				__m512 r1 = _mm512_mul_ps(cur, cur);
 				__m512 r2 = _mm512_permute_ps(r1, _MM_SHUFFLE(0, 3, 0, 1));
 				r1 = _mm512_add_ps(r1, r2);
@@ -83,7 +83,7 @@ void PatternFilter::ApplyPattern2D_degrid_AVX512() noexcept
 		{
 			for (w = 0; w < outwidth8; w = w + 8)
 			{
-				__m512 gridcorrection8 = _mm512_mul_ps(gridfraction8, _mm512_load_ps(gridsample[w])); //gridcorrection8
+				const __m512 gridcorrection8 = _mm512_mul_ps(gridfraction8, _mm512_load_ps(gridsample[w])); //gridcorrection8
 				__m512 cur = _mm512_load_ps(outcur[w]);
 				cur = _mm512_sub_ps(cur, gridcorrection8); //corrected
 				__m512 r1 = _mm512_mul_ps(cur, cur);
@@ -151,8 +151,8 @@ void PatternFilter::ApplyPattern3D2_AVX512() noexcept
 				r1 = _mm512_mul_ps(sum8, sum8);
 				r2 = _mm512_mul_ps(dif8, dif8);
 
-				__m512 r3 = _mm512_permute_ps(r1, _MM_SHUFFLE(0, 3, 0, 1));
-				__m512 r4 = _mm512_permute_ps(r2, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m512 r3 = _mm512_permute_ps(r1, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m512 r4 = _mm512_permute_ps(r2, _MM_SHUFFLE(0, 3, 0, 1));
 
 				__m512 psds8 = _mm512_add_ps(r1, r3);
 				__m512 psdd8 = _mm512_add_ps(r2, r4);
@@ -167,8 +167,8 @@ void PatternFilter::ApplyPattern3D2_AVX512() noexcept
 				r1 = _mm512_div_ps(r1, psds8);
 				r2 = _mm512_div_ps(r2, psdd8);
 
-				__m512 WienerFactors8 = _mm512_max_ps(r1, _mm512_set1_ps(lowlimit));
-				__m512 WienerFactord8 = _mm512_max_ps(r2, _mm512_set1_ps(lowlimit));
+				const __m512 WienerFactors8 = _mm512_max_ps(r1, _mm512_set1_ps(lowlimit));
+				const __m512 WienerFactord8 = _mm512_max_ps(r2, _mm512_set1_ps(lowlimit));
 
 				r1 = _mm512_moveldup_ps(WienerFactors8);
 				r2 = _mm512_moveldup_ps(WienerFactord8);
@@ -237,8 +237,8 @@ void PatternFilter::ApplyPattern3D2_degrid_AVX512() noexcept
 				r1 = _mm512_mul_ps(sum8, sum8);
 				r2 = _mm512_mul_ps(dif8, dif8);
 
-				__m512 r3 = _mm512_permute_ps(r1, _MM_SHUFFLE(0, 3, 0, 1));
-				__m512 r4 = _mm512_permute_ps(r2, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m512 r3 = _mm512_permute_ps(r1, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m512 r4 = _mm512_permute_ps(r2, _MM_SHUFFLE(0, 3, 0, 1));
 
 				__m512 psds8 = _mm512_add_ps(r1, r3);
 				__m512 psdd8 = _mm512_add_ps(r2, r4);
@@ -253,8 +253,8 @@ void PatternFilter::ApplyPattern3D2_degrid_AVX512() noexcept
 				r1 = _mm512_div_ps(r1, psds8);
 				r2 = _mm512_div_ps(r2, psdd8);
 
-				__m512 WienerFactors8 = _mm512_max_ps(r1, _mm512_set1_ps(lowlimit));
-				__m512 WienerFactord8 = _mm512_max_ps(r2, _mm512_set1_ps(lowlimit));
+				const __m512 WienerFactors8 = _mm512_max_ps(r1, _mm512_set1_ps(lowlimit));
+				const __m512 WienerFactord8 = _mm512_max_ps(r2, _mm512_set1_ps(lowlimit));
 
 				r1 = _mm512_moveldup_ps(WienerFactors8);
 				r2 = _mm512_moveldup_ps(WienerFactord8);
@@ -323,7 +323,7 @@ void PatternFilter::ApplyPattern3D3_AVX512() noexcept
 			for (w = 0; w < outwidth8; w = w + 8) // 
 			{
 				__m512 r1 = _mm512_load_ps(outprev[w]);
-				__m512 pn8 = _mm512_add_ps(r1, r2); //r,i,r,i
+				const __m512 pn8 = _mm512_add_ps(r1, r2); //r,i,r,i
 				__m512 fc8 = _mm512_add_ps(pn8, r3); //r,i,r,i
 
 				__m512 d8 = _mm512_sub_ps(r1, r2); //r,i,r,i!
@@ -387,12 +387,12 @@ void PatternFilter::ApplyPattern3D3_AVX512() noexcept
 			_mm_prefetch((const char*)(pattern3d + outpitch), _MM_HINT_T0);
 			for (; w < outwidth; w++) // 
 			{
-				float pnr = outprev[w][0] + outnext[w][0];
-				float pni = outprev[w][1] + outnext[w][1];
+				const float pnr = outprev[w][0] + outnext[w][0];
+				const float pni = outprev[w][1] + outnext[w][1];
 				fcr = outcur[w][0] + pnr; // real cur
 				fci = outcur[w][1] + pni; // im cur
-				float di = sin120 * (outprev[w][1] - outnext[w][1]);
-				float dr = sin120 * (outnext[w][0] - outprev[w][0]);
+				const float di = sin120 * (outprev[w][1] - outnext[w][1]);
+				const float dr = sin120 * (outnext[w][0] - outprev[w][0]);
 				fpr = outcur[w][0] - 0.5f*pnr + di; // real prev
 				fnr = outcur[w][0] - 0.5f*pnr - di; // real next
 				fpi = outcur[w][1] - 0.5f*pni + dr; // im prev
@@ -446,7 +446,7 @@ void PatternFilter::ApplyPattern3D3_degrid_AVX512() noexcept
 				__m512 gridcorrection8 = _mm512_mul_ps(gridfraction8, _mm512_load_ps(gridsample[w])); //gridcorrection8
 				gridcorrection8 = _mm512_mul_ps(gridcorrection8, _mm512_set1_ps(3.0f));
 				__m512 r1 = _mm512_load_ps(outprev[w]);
-				__m512 pn8 = _mm512_add_ps(r1, r2); //r,i,r,i
+				const __m512 pn8 = _mm512_add_ps(r1, r2); //r,i,r,i
 				__m512 fc8 = _mm512_add_ps(pn8, r3); //r,i,r,i
 				fc8 = _mm512_sub_ps(fc8, gridcorrection8);
 
@@ -515,14 +515,14 @@ void PatternFilter::ApplyPattern3D3_degrid_AVX512() noexcept
 			{
 				float gridcorrection0_3 = gridfraction * gridsample[w][0] * 3;
 				float gridcorrection1_3 = gridfraction * gridsample[w][1] * 3;
-				float pnr = outprev[w][0] + outnext[w][0];
-				float pni = outprev[w][1] + outnext[w][1];
+				const float pnr = outprev[w][0] + outnext[w][0];
+				const float pni = outprev[w][1] + outnext[w][1];
 				fcr = outcur[w][0] + pnr; // real cur
 				fcr -= gridcorrection0_3;
 				fci = outcur[w][1] + pni; // im cur
 				fci -= gridcorrection1_3;
-				float di = sin120 * (outprev[w][1] - outnext[w][1]);
-				float dr = sin120 * (outnext[w][0] - outprev[w][0]);
+				const float di = sin120 * (outprev[w][1] - outnext[w][1]);
+				const float dr = sin120 * (outnext[w][0] - outprev[w][0]);
 				fpr = outcur[w][0] - 0.5f*pnr + di; // real prev
 				fnr = outcur[w][0] - 0.5f*pnr - di; // real next
 				fpi = outcur[w][1] - 0.5f*pni + dr; // im prev
@@ -561,7 +561,7 @@ void PatternFilter::ApplyPattern3D4_AVX512() noexcept
 	// return result in outprev
 	float fcr(0.0f), fci(0.0f), fpr(0.0f), fpi(0.0f), fnr(0.0f), fni(0.0f), fp2r(0.0f), fp2i(0.0f), WienerFactor(0.0f), psd(0.0f);
 	int w(0);
-	int outwidth8 = outwidth - outwidth % 8;
+	const int outwidth8 = outwidth - outwidth % 8;
 	const __m512 lowlimit8 = _mm512_set1_ps(lowlimit);
 	constexpr __mmask16 k1 = 0x5555;
 	constexpr __mmask16 k2 = 0xAAAA;
@@ -614,10 +614,10 @@ void PatternFilter::ApplyPattern3D4_AVX512() noexcept
 				r3 = _mm512_mul_ps(r5, r5);
 				r4 = _mm512_mul_ps(r6, r6);
 
-				__m512 sh1 = _mm512_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
-				__m512 sh2 = _mm512_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
-				__m512 sh3 = _mm512_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
-				__m512 sh4 = _mm512_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m512 sh1 = _mm512_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m512 sh2 = _mm512_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m512 sh3 = _mm512_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m512 sh4 = _mm512_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
 
 				r1 = _mm512_add_ps(sh1, sh2);
 				r2 = _mm512_add_ps(sh3, sh4);
@@ -729,7 +729,7 @@ void PatternFilter::ApplyPattern3D4_degrid_AVX512() noexcept
 			__m512 r4 = _mm512_load_ps(&outnext[0][0]);
 			for (w = 0; w < outwidth8; w = w + 8)
 			{
-				__m512 gridcorrection8 = _mm512_mul_ps(_mm512_mul_ps(_mm512_load_ps(&gridsample[w][0]), gridfraction8), _mm512_set1_ps(4));
+				const __m512 gridcorrection8 = _mm512_mul_ps(_mm512_mul_ps(_mm512_load_ps(&gridsample[w][0]), gridfraction8), _mm512_set1_ps(4));
 				__m512 r1 = _mm512_load_ps(&outprev2[w][0]);
 				__m512 r2 = _mm512_load_ps(&outprev[w][0]);
 				//outcur[w][0] - outnext[w][1] - outprev2[w][0] + outprev[w][1]
@@ -771,10 +771,10 @@ void PatternFilter::ApplyPattern3D4_degrid_AVX512() noexcept
 				r3 = _mm512_mul_ps(r5, r5);
 				r4 = _mm512_mul_ps(r6, r6);
 
-				__m512 sh1 = _mm512_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
-				__m512 sh2 = _mm512_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
-				__m512 sh3 = _mm512_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
-				__m512 sh4 = _mm512_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m512 sh1 = _mm512_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m512 sh2 = _mm512_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m512 sh3 = _mm512_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m512 sh4 = _mm512_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
 
 				r1 = _mm512_add_ps(sh1, sh2);
 				r2 = _mm512_add_ps(sh3, sh4);
@@ -911,7 +911,7 @@ void PatternFilter::ApplyPattern3D5_AVX512() noexcept
 			{
 				__m512 r1 = _mm512_load_ps(outprev2[w]);
 				__m512 r2 = _mm512_load_ps(outnext2[w]);
-				__m512 r5 = _mm512_load_ps(outcur[w]);
+				const __m512 r5 = _mm512_load_ps(outcur[w]);
 
 				__m512 r6 = _mm512_add_ps(r1, r2);
 				r6 = _mm512_mask_sub_ps(r6, k2, r1, r2);
@@ -934,8 +934,8 @@ void PatternFilter::ApplyPattern3D5_AVX512() noexcept
 				r7 = _mm512_add_ps(r6, r7);
 				r7 = _mm512_mask_add_ps(r5, k2, r7, r5);
 				r6 = _mm512_permute_ps(r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m512 fp2i = _mm512_add_ps(r7, r6);
-				__m512 fn2i = _mm512_sub_ps(r6, r7);
+				const __m512 fp2i = _mm512_add_ps(r7, r6);
+				const __m512 fn2i = _mm512_sub_ps(r6, r7);
 
 				r6 = _mm512_add_ps(r2, r1);
 				r6 = _mm512_mask_sub_ps(r6, k2, r2, r1);
@@ -958,8 +958,8 @@ void PatternFilter::ApplyPattern3D5_AVX512() noexcept
 				r7 = _mm512_add_ps(r6, r7);
 				r7 = _mm512_mask_add_ps(r5, k2, r7, r5);
 				r6 = _mm512_permute_ps(r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m512 fpi = _mm512_add_ps(r7, r6);
-				__m512 fni = _mm512_sub_ps(r6, r7);
+				const __m512 fpi = _mm512_add_ps(r7, r6);
+				const __m512 fni = _mm512_sub_ps(r6, r7);
 
 				r6 = _mm512_add_ps(r1, r2);
 				r7 = _mm512_add_ps(r3, r4);
@@ -1044,28 +1044,27 @@ void PatternFilter::ApplyPattern3D5_AVX512() noexcept
 			_mm_prefetch((const char*)(pattern3d + outpitch), _MM_HINT_T0);
 			for (; w < outwidth; w++) // 
 			{
-				float fcr, fci, fpr, fpi, fnr, fni, fp2r, fp2i, fn2r, fn2i, WienerFactor, psd;
 				float sum = (outprev2[w][0] + outnext2[w][0])*cos72 + (outprev[w][0] + outnext[w][0])*cos144 + +outcur[w][0];
 				float dif = (-outprev2[w][1] + outnext2[w][1])*sin72 + (outprev[w][1] - outnext[w][1])*sin144;
-				fp2r = sum + dif; // real prev2
-				fn2r = sum - dif; // real next2
+				float fp2r = sum + dif; // real prev2
+				float fn2r = sum - dif; // real next2
 				sum = (outprev2[w][1] + outnext2[w][1])*cos72 + (outprev[w][1] + outnext[w][1])*cos144 + outcur[w][1];
 				dif = (outprev2[w][0] - outnext2[w][0])*sin72 + (-outprev[w][0] + outnext[w][0])*sin144;
-				fp2i = sum + dif; // im prev2
-				fn2i = sum - dif; // im next2
+				float fp2i = sum + dif; // im prev2
+				float fn2i = sum - dif; // im next2
 				sum = (outprev2[w][0] + outnext2[w][0])*cos144 + (outprev[w][0] + outnext[w][0])*cos72 + outcur[w][0];
 				dif = (outprev2[w][1] - outnext2[w][1])*sin144 + (outprev[w][1] - outnext[w][1])*sin72;
-				fpr = sum + dif; // real prev
-				fnr = sum - dif; // real next
+				float fpr = sum + dif; // real prev
+				float fnr = sum - dif; // real next
 				sum = (outprev2[w][1] + outnext2[w][1])*cos144 + (outprev[w][1] + outnext[w][1])*cos72 + outcur[w][1];
 				dif = (-outprev2[w][0] + outnext2[w][0])*sin144 + (-outprev[w][0] + outnext[w][0])*sin72;
-				fpi = sum + dif; // im prev
-				fni = sum - dif; // im next
-				fcr = outprev2[w][0] + outprev[w][0] + outcur[w][0] + outnext[w][0] + outnext2[w][0]; // real cur
-				fci = outprev2[w][1] + outprev[w][1] + outcur[w][1] + outnext[w][1] + outnext2[w][1]; // im cur
+				float fpi = sum + dif; // im prev
+				float fni = sum - dif; // im next
+				float fcr = outprev2[w][0] + outprev[w][0] + outcur[w][0] + outnext[w][0] + outnext2[w][0]; // real cur
+				float fci = outprev2[w][1] + outprev[w][1] + outcur[w][1] + outnext[w][1] + outnext2[w][1]; // im cur
 
-				psd = fp2r * fp2r + fp2i * fp2i + 1e-15f; // power spectrum density prev2
-				WienerFactor = max((psd - pattern3d[w]) / psd, lowlimit); // limited Wiener filter
+				float psd = fp2r * fp2r + fp2i * fp2i + 1e-15f; // power spectrum density prev2
+				float WienerFactor = max((psd - pattern3d[w]) / psd, lowlimit); // limited Wiener filter
 				fp2r *= WienerFactor; // apply filter on real  part	
 				fp2i *= WienerFactor; // apply filter on imaginary part
 
@@ -1151,7 +1150,7 @@ void PatternFilter::ApplyPattern3D5_degrid_AVX512() noexcept
 				gridcorrection8 = _mm512_mul_ps(gridcorrection8, _mm512_set1_ps(5));
 				__m512 r1 = _mm512_load_ps(outprev2[w]);
 				__m512 r2 = _mm512_load_ps(outnext2[w]);
-				__m512 r5 = _mm512_load_ps(outcur[w]);
+				const __m512 r5 = _mm512_load_ps(outcur[w]);
 
 				__m512 r6 = _mm512_add_ps(r1, r2);
 				r6 = _mm512_mask_sub_ps(r6, k2, r1, r2);
@@ -1174,8 +1173,8 @@ void PatternFilter::ApplyPattern3D5_degrid_AVX512() noexcept
 				r7 = _mm512_add_ps(r6, r7);
 				r7 = _mm512_mask_add_ps(r5, k2, r7, r5);
 				r6 = _mm512_permute_ps(r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m512 fp2i = _mm512_add_ps(r7, r6);
-				__m512 fn2i = _mm512_sub_ps(r6, r7);
+				const __m512 fp2i = _mm512_add_ps(r7, r6);
+				const __m512 fn2i = _mm512_sub_ps(r6, r7);
 
 				r6 = _mm512_add_ps(r2, r1);
 				r6 = _mm512_mask_sub_ps(r6, k2, r2, r1);
@@ -1198,8 +1197,8 @@ void PatternFilter::ApplyPattern3D5_degrid_AVX512() noexcept
 				r7 = _mm512_add_ps(r6, r7);
 				r7 = _mm512_mask_add_ps(r5, k2, r7, r5);
 				r6 = _mm512_permute_ps(r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m512 fpi = _mm512_add_ps(r7, r6);
-				__m512 fni = _mm512_sub_ps(r6, r7);
+				const __m512 fpi = _mm512_add_ps(r7, r6);
+				const __m512 fni = _mm512_sub_ps(r6, r7);
 
 				r6 = _mm512_add_ps(r1, r2);
 				r7 = _mm512_add_ps(r3, r4);
@@ -1287,32 +1286,31 @@ void PatternFilter::ApplyPattern3D5_degrid_AVX512() noexcept
 			_mm_prefetch((const char*)(pattern3d + outpitch), _MM_HINT_T0);
 			for (; w < outwidth; w++) // 
 			{
-				float fcr, fci, fpr, fpi, fnr, fni, fp2r, fp2i, fn2r, fn2i, WienerFactor, psd;
 				float gridcorrection0_5 = gridfraction * gridsample[w][0] * 5;
 				float gridcorrection1_5 = gridfraction * gridsample[w][1] * 5;
 				float sum = (outprev2[w][0] + outnext2[w][0])*cos72 + (outprev[w][0] + outnext[w][0])*cos144 + +outcur[w][0];
 				float dif = (-outprev2[w][1] + outnext2[w][1])*sin72 + (outprev[w][1] - outnext[w][1])*sin144;
-				fp2r = sum + dif; // real prev2
-				fn2r = sum - dif; // real next2
+				float fp2r = sum + dif; // real prev2
+				float fn2r = sum - dif; // real next2
 				sum = (outprev2[w][1] + outnext2[w][1])*cos72 + (outprev[w][1] + outnext[w][1])*cos144 + outcur[w][1];
 				dif = (outprev2[w][0] - outnext2[w][0])*sin72 + (-outprev[w][0] + outnext[w][0])*sin144;
-				fp2i = sum + dif; // im prev2
-				fn2i = sum - dif; // im next2
+				float fp2i = sum + dif; // im prev2
+				float fn2i = sum - dif; // im next2
 				sum = (outprev2[w][0] + outnext2[w][0])*cos144 + (outprev[w][0] + outnext[w][0])*cos72 + outcur[w][0];
 				dif = (outprev2[w][1] - outnext2[w][1])*sin144 + (outprev[w][1] - outnext[w][1])*sin72;
-				fpr = sum + dif; // real prev
-				fnr = sum - dif; // real next
+				float fpr = sum + dif; // real prev
+				float fnr = sum - dif; // real next
 				sum = (outprev2[w][1] + outnext2[w][1])*cos144 + (outprev[w][1] + outnext[w][1])*cos72 + outcur[w][1];
 				dif = (-outprev2[w][0] + outnext2[w][0])*sin144 + (-outprev[w][0] + outnext[w][0])*sin72;
-				fpi = sum + dif; // im prev
-				fni = sum - dif; // im next
-				fcr = outprev2[w][0] + outprev[w][0] + outcur[w][0] + outnext[w][0] + outnext2[w][0]; // real cur
+				float fpi = sum + dif; // im prev
+				float fni = sum - dif; // im next
+				float fcr = outprev2[w][0] + outprev[w][0] + outcur[w][0] + outnext[w][0] + outnext2[w][0]; // real cur
 				fcr -= gridcorrection0_5;
-				fci = outprev2[w][1] + outprev[w][1] + outcur[w][1] + outnext[w][1] + outnext2[w][1]; // im cur
+				float fci = outprev2[w][1] + outprev[w][1] + outcur[w][1] + outnext[w][1] + outnext2[w][1]; // im cur
 				fci -= gridcorrection1_5;
 
-				psd = fp2r * fp2r + fp2i * fp2i + 1e-15f; // power spectrum density prev2
-				WienerFactor = max((psd - pattern3d[w]) / psd, lowlimit); // limited Wiener filter
+				float psd = fp2r * fp2r + fp2i * fp2i + 1e-15f; // power spectrum density prev2
+				float WienerFactor = max((psd - pattern3d[w]) / psd, lowlimit); // limited Wiener filter
 				fp2r *= WienerFactor; // apply filter on real  part	
 				fp2i *= WienerFactor; // apply filter on imaginary part
 

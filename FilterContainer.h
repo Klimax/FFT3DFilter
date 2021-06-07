@@ -22,6 +22,7 @@
 
 #pragma once
 #include <vector>
+#include <thread>
 #include "Wiener.h"
 #include "WienerPattern.h"
 #include "Sharpen.h"
@@ -42,8 +43,8 @@ public:
 	std::vector<PatternFilter> PatternFilters;
 	std::vector<SharpenFilter> SharpenFilters;
 	std::vector<KalmanFilter> KalmanFilters;
-	std::vector<HANDLE> threads;
-	int thread_offset;
+	std::vector<HANDLE> handles;
+	int thread_offset = 0;
 
 	void ApplyWiener2D(fftwf_complex *outcur, float sigmaSquaredNoiseNormed);
 	void ApplyWiener3D2(fftwf_complex *outcur, fftwf_complex *outprev, float sigmaSquaredNoiseNormed);

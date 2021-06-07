@@ -265,7 +265,7 @@ void FFT3DFilter::InitOverlapPlane_wt2_C(float *__restrict inp0, const BYTE *__r
 
 	float *__restrict inp = inp0;
 
-	int ihy = 0; // first top (big non-overlapped) part
+	// first top (big non-overlapped) part
 	{
 		for (int h = 0; h < oh; h++)
 		{
@@ -348,7 +348,7 @@ void FFT3DFilter::InitOverlapPlane_wt2_C(float *__restrict inp0, const BYTE *__r
 		}
 	}
 
-	for (ihy = 1; ihy < noy; ihy += 1) // middle vertical
+	for (int ihy = 1; ihy < noy; ihy += 1) // middle vertical
 	{
 		for (int h = 0; h < oh; h++) // top overlapped part
 		{
@@ -444,7 +444,7 @@ void FFT3DFilter::InitOverlapPlane_wt2_C(float *__restrict inp0, const BYTE *__r
 
 	}
 
-	ihy = noy; // last bottom  part
+	int ihy = noy; // last bottom  part
 	{
 		for (int h = 0; h < oh; h++)
 		{

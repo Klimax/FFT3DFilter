@@ -23,46 +23,6 @@
 #include "Wiener.h"
 #include "enums.h"
 
-DWORD WINAPI ApplyWiener3D5_MT(LPVOID lpParam)
-{
-	WienerFilter* in = (WienerFilter*)lpParam;
-
-	in->ApplyWiener3D5(*in);
-	return 0;
-}
-
-DWORD WINAPI ApplyWiener3D4_MT(LPVOID lpParam)
-{
-	WienerFilter* in = (WienerFilter*)lpParam;
-
-	in->ApplyWiener3D4(*in);
-	return 0;
-}
-
-DWORD WINAPI ApplyWiener3D3_MT(LPVOID lpParam)
-{
-	WienerFilter* in = (WienerFilter*)lpParam;
-
-	in->ApplyWiener3D3(*in);
-	return 0;
-}
-
-DWORD WINAPI ApplyWiener3D2_MT(LPVOID lpParam)
-{
-	WienerFilter* in = (WienerFilter*)lpParam;
-
-	in->ApplyWiener3D2(*in);
-	return 0;
-}
-
-DWORD WINAPI ApplyWiener2D_MT(LPVOID lpParam)
-{
-	WienerFilter* in = (WienerFilter*)lpParam;
-
-	in->ApplyWiener2D(*in);
-	return 0;
-}
-
 WienerFilter::WienerFilter(int start_block, int blocks, int outwidth, int outpitch, int bh, int CPUFlags, fftwf_complex *gridsample,
 	float lowlimit, float degrid, float sharpen, float sigmaSquaredSharpenMin,
 	float sigmaSquaredSharpenMax, float *wsharpen, float dehalo, float *wdehalo, float ht2n) :

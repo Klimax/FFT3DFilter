@@ -665,7 +665,7 @@ class IClip {
 	void AddRef();
 	void Release();
 public:
-	IClip() : refcnt(0) {}
+	IClip() noexcept : refcnt(0) {}
 	virtual int __stdcall GetVersion() { return AVISYNTH_INTERFACE_VERSION; }
 	virtual PVideoFrame __stdcall GetFrame(int n, IScriptEnvironment* env) = 0;
 	virtual bool __stdcall GetParity(int n) = 0;  // return field parity if field_based, else parity of first field in frame

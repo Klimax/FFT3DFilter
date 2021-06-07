@@ -23,46 +23,6 @@
 #include "WienerPattern.h"
 #include "enums.h"
 
-DWORD WINAPI ApplyPattern3D4_MT(LPVOID lpParam)
-{
-	PatternFilter* in = (PatternFilter*)lpParam;
-
-	in->ApplyPattern3D4(*in);
-	return 0;
-}
-
-DWORD WINAPI ApplyPattern3D5_MT(LPVOID lpParam)
-{
-	PatternFilter* in = (PatternFilter*)lpParam;
-
-	in->ApplyPattern3D5(*in);
-	return 0;
-}
-
-DWORD WINAPI ApplyPattern3D3_MT(LPVOID lpParam)
-{
-	PatternFilter* in = (PatternFilter*)lpParam;
-
-	in->ApplyPattern3D3(*in);
-	return 0;
-}
-
-DWORD WINAPI ApplyPattern3D2_MT(LPVOID lpParam)
-{
-	PatternFilter* in = (PatternFilter*)lpParam;
-
-	in->ApplyPattern3D2(*in);
-	return 0;
-}
-
-DWORD WINAPI ApplyPattern2D_MT(LPVOID lpParam)
-{
-	PatternFilter* in = (PatternFilter*)lpParam;
-
-	in->ApplyPattern2D(*in);
-	return 0;
-}
-
 PatternFilter::PatternFilter(int start_block, int blocks, int outwidth, int outpitch, int bh, int CPUFlags, fftwf_complex *gridsample,
 	float lowlimit, float degrid, float sharpen, float sigmaSquaredSharpenMin,
 	float sigmaSquaredSharpenMax, float *wsharpen, float dehalo, float *wdehalo, float ht2n) :

@@ -58,7 +58,3 @@ public:
 	fftwf_complex * outcur, *outLast;
 	float covarNoiseNormed, *covarNoiseNormed2;
 };
-
-//Multithreaded versions
-DWORD WINAPI ApplyKalman_MT(LPVOID lpParam);
-DWORD WINAPI ApplyKalmanPattern_MT(LPVOID lpParam);

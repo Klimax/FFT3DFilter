@@ -50,8 +50,8 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 			inp = inp0 + h * bw;
 			for (w = 0; w < dbwow16; w = w + 16)   // first half line of first block
 			{   // Copy each byte from float array to dest with windows
-				__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
-				__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+				const __m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
+				const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 				_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFF, r1i);
 			}
 			for (; w < dbwow; w++)   // first half line of first block
@@ -65,10 +65,10 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 				for (w = 0; w < ow16; w = w + 16)   // half line of block
 				{
 					__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), _mm512_load_ps(&wsynxr[w]));
-					__m512 r3 = _mm512_mul_ps(_mm512_load_ps(&inp[w + xoffset]), _mm512_load_ps(&wsynxl[w]));
+					const __m512 r3 = _mm512_mul_ps(_mm512_load_ps(&inp[w + xoffset]), _mm512_load_ps(&wsynxl[w]));
 					r1 = _mm512_add_ps(r1, r3);
 					r1 = _mm512_mul_ps(r1, norm16);
-					__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+					const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 					_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFFFF, r1i);
 				}
 				for (; w < ow; w++)   // half line of block
@@ -80,8 +80,8 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 
 				for (w = 0; w < d2bwow16; w = w + 16)   // last half line of last block
 				{
-					__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
-					__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+					const __m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
+					const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 					_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFFFF, r1i);
 				}
 				for (; w < d2bwow; w++)   // first half line of first block
@@ -93,8 +93,8 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 			}
 			for (w = 0; w < ow16; w = w + 16)   // first half line of first block
 			{   // Copy each byte from float array to dest with windows
-				__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
-				__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+				const __m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
+				const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 				_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFF, r1i);
 			}
 			for (; w < ow; w++)   // last half line of last block
@@ -122,9 +122,9 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 			for (w = 0; w < dbwow16; w = w + 16)   // first half line of first block
 			{
 				__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), wsynyrh16);
-				__m512 r3 = _mm512_mul_ps(_mm512_load_ps(&inp[w + yoffset]), wsynylh16);
+				const __m512 r3 = _mm512_mul_ps(_mm512_load_ps(&inp[w + yoffset]), wsynylh16);
 				r1 = _mm512_add_ps(r1, r3);
-				__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+				const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 				_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFFFF, r1i);
 			}
 			for (; w < dbwow; w++)   // first half line of first block
@@ -138,16 +138,16 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 				for (w = 0; w < ow4; w = w + 4)   // half overlapped line of block ; AVX processing fails because of offsets...
 				{
 					__m128 r1 = _mm_mul_ps(_mm_load_ps(&inp[w]), _mm_load_ps(&wsynxr[w]));
-					__m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
+					const __m128 r3 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset]), _mm_load_ps(&wsynxl[w]));
 					__m128 r6 = _mm_mul_ps(_mm_load_ps(&inp[w + yoffset]), _mm_load_ps(&wsynxr[w]));
-					__m128 r8 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset + yoffset]), _mm_load_ps(&wsynxl[w]));
+					const __m128 r8 = _mm_mul_ps(_mm_load_ps(&inp[w + xoffset + yoffset]), _mm_load_ps(&wsynxl[w]));
 					r1 = _mm_add_ps(r1, r3);
 					r6 = _mm_add_ps(r6, r8);
 					r1 = _mm_mul_ps(r1, wsynyrh4);
 					r6 = _mm_mul_ps(r6, wsynylh4);
 					r1 = _mm_add_ps(r1, r6);
 
-					__m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), _mm_set1_epi32(planeBase));
+					const __m128i r1i = _mm_add_epi32(_mm_cvtps_epi32(r1), _mm_set1_epi32(planeBase));
 					_mm_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFF, r1i);
 				}
 				for (; w < ow; w++)   // half overlapped line of block
@@ -161,9 +161,9 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 				for (w = 0; w < d2bwow16; w = w + 16)   // last half line of last block
 				{
 					__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), wsynyrh16);
-					__m512 r2 = _mm512_mul_ps(_mm512_load_ps(&inp[w + yoffset]), wsynylh16);
+					const __m512 r2 = _mm512_mul_ps(_mm512_load_ps(&inp[w + yoffset]), wsynylh16);
 					r1 = _mm512_add_ps(r1, r2);
-					__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+					const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 					_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFFFF, r1i);
 				}
 				for (; w < d2bwow; w++)   // double minus - half non-overlapped line of block
@@ -176,9 +176,9 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 			for (w = 0; w < ow16; w = w + 16)   // last half line of last block
 			{
 				__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), wsynyrh16);
-				__m512 r3 = _mm512_mul_ps(_mm512_load_ps(&inp[w + yoffset]), wsynylh16);
+				const __m512 r3 = _mm512_mul_ps(_mm512_load_ps(&inp[w + yoffset]), wsynylh16);
 				r1 = _mm512_add_ps(r1, r3);
-				__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+				const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 				_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFFFF, r1i);
 			}
 			for (; w < ow; w++)   // last half line of last block
@@ -205,10 +205,10 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 				for (w = 0; w < ow16; w = w + 16)   // half line of block
 				{
 					__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), _mm512_load_ps(&wsynxr[w]));
-					__m512 r3 = _mm512_mul_ps(_mm512_load_ps(&inp[w + xoffset]), _mm512_load_ps(&wsynxl[w]));
+					const __m512 r3 = _mm512_mul_ps(_mm512_load_ps(&inp[w + xoffset]), _mm512_load_ps(&wsynxl[w]));
 					r1 = _mm512_add_ps(r1, r3);
 					r1 = _mm512_mul_ps(r1, norm16);
-					__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+					const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 					_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFFFF, r1i);
 				}
 				for (; w < ow; w++)   // half overlapped line of block
@@ -220,8 +220,8 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 
 				for (w = 0; w < d2bwow16; w = w + 16)   // last half line of last block
 				{
-					__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
-					__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+					const __m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
+					const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 					_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFFFF, r1i);
 				}
 				for (; w < d2bwow; w++)   // half non-overlapped line of block
@@ -233,8 +233,8 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 			}
 			for (w = 0; w < ow16; w = w + 16)   // first half line of first block
 			{   // Copy each byte from float array to dest with windows
-				__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
-				__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+				const __m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
+				const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 				_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFF, r1i);
 			}
 			for (; w < ow; w++)   // last half line of last block
@@ -256,8 +256,8 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 			inp = inp0 + (ihy - 1)*(yoffset + (bh - oh)*bw) + (bh - oh)*bw + h * bw;
 			for (w = 0; w < dbwow16; w = w + 16)   // first half line of first block
 			{   // Copy each byte from float array to dest with windows
-				__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
-				__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+				const __m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
+				const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 				_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFFFF, r1i);
 			}
 			for (; w < dbwow; w++)   // first half line of first block
@@ -271,10 +271,10 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 				for (w = 0; w < ow16; w = w + 16)   // half line of block
 				{
 					__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), _mm512_load_ps(&wsynxr[w]));
-					__m512 r3 = _mm512_mul_ps(_mm512_load_ps(&inp[w + xoffset]), _mm512_load_ps(&wsynxl[w]));
+					const __m512 r3 = _mm512_mul_ps(_mm512_load_ps(&inp[w + xoffset]), _mm512_load_ps(&wsynxl[w]));
 					r1 = _mm512_add_ps(r1, r3);
 					r1 = _mm512_mul_ps(r1, norm16);
-					__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+					const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 					_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFFFF, r1i);
 				}
 				for (; w < ow; w++)   // half line of block
@@ -286,8 +286,8 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 
 				for (w = 0; w < d2bwow16; w = w + 16)   // last half line of last block
 				{
-					__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
-					__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+					const __m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
+					const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 					_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFFFF, r1i);
 				}
 				for (; w < d2bwow; w++)   // half line of block
@@ -299,8 +299,8 @@ void FFT3DFilter::DecodeOverlapPlane_AVX512(const float *__restrict inp0, BYTE *
 			}
 			for (w = 0; w < ow16; w = w + 16)   // first half line of first block
 			{   // Copy each byte from float array to dest with windows
-				__m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
-				__m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
+				const __m512 r1 = _mm512_mul_ps(_mm512_load_ps(&inp[w]), norm16);
+				const __m512i r1i = _mm512_add_epi32(_mm512_cvtps_epi32(r1), planebase16);
 				_mm512_mask_cvtusepi32_storeu_epi8(&dstp[w], 0xFFFF, r1i);
 			}
 			for (; w < ow; w++)   // last half line of last block

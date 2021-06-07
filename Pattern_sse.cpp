@@ -34,7 +34,7 @@ void PatternFilter::ApplyPattern2D_SSE() noexcept
 		{
 			for (int w = 0; w < outwidth; w = w + 2)
 			{
-				__m128 cur = _mm_load_ps(outcur[w]);
+				const __m128 cur = _mm_load_ps(outcur[w]);
 				__m128 r1 = _mm_mul_ps(cur, cur);
 				__m128 r2 = _mm_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
 				r1 = _mm_add_ps(r1, r2);
@@ -120,8 +120,8 @@ void PatternFilter::ApplyPattern3D2_SSE() noexcept
 				r1 = _mm_mul_ps(sum4, sum4);
 				r2 = _mm_mul_ps(dif4, dif4);
 
-				__m128 r3 = _mm_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
-				__m128 r4 = _mm_shuffle_ps(r2, r2, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m128 r3 = _mm_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m128 r4 = _mm_shuffle_ps(r2, r2, _MM_SHUFFLE(0, 3, 0, 1));
 
 				__m128 psds4 = _mm_add_ps(r1, r3);
 				__m128 psdd4 = _mm_add_ps(r2, r4);
@@ -136,8 +136,8 @@ void PatternFilter::ApplyPattern3D2_SSE() noexcept
 				r1 = _mm_div_ps(r1, psds4);
 				r2 = _mm_div_ps(r2, psdd4);
 
-				__m128 WienerFactors4 = _mm_max_ps(r1, _mm_load1_ps(&lowlimit));
-				__m128 WienerFactord4 = _mm_max_ps(r2, _mm_load1_ps(&lowlimit));
+				const __m128 WienerFactors4 = _mm_max_ps(r1, _mm_load1_ps(&lowlimit));
+				const __m128 WienerFactord4 = _mm_max_ps(r2, _mm_load1_ps(&lowlimit));
 
 				r1 = _mm_shuffle_ps(WienerFactors4, WienerFactors4, _MM_SHUFFLE(2, 2, 0, 0));
 				r2 = _mm_shuffle_ps(WienerFactord4, WienerFactord4, _MM_SHUFFLE(2, 2, 0, 0));
@@ -183,8 +183,8 @@ void PatternFilter::ApplyPattern3D2_degrid_SSE() noexcept
 				r1 = _mm_mul_ps(sum4, sum4);
 				r2 = _mm_mul_ps(dif4, dif4);
 
-				__m128 r3 = _mm_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
-				__m128 r4 = _mm_shuffle_ps(r2, r2, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m128 r3 = _mm_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
+				const __m128 r4 = _mm_shuffle_ps(r2, r2, _MM_SHUFFLE(0, 3, 0, 1));
 
 				__m128 psds4 = _mm_add_ps(r1, r3);
 				__m128 psdd4 = _mm_add_ps(r2, r4);
@@ -199,8 +199,8 @@ void PatternFilter::ApplyPattern3D2_degrid_SSE() noexcept
 				r1 = _mm_div_ps(r1, psds4);
 				r2 = _mm_div_ps(r2, psdd4);
 
-				__m128 WienerFactors4 = _mm_max_ps(r1, _mm_load1_ps(&lowlimit));
-				__m128 WienerFactord4 = _mm_max_ps(r2, _mm_load1_ps(&lowlimit));
+				const __m128 WienerFactors4 = _mm_max_ps(r1, _mm_load1_ps(&lowlimit));
+				const __m128 WienerFactord4 = _mm_max_ps(r2, _mm_load1_ps(&lowlimit));
 
 				r1 = _mm_shuffle_ps(WienerFactors4, WienerFactors4, _MM_SHUFFLE(2, 2, 0, 0));
 				r2 = _mm_shuffle_ps(WienerFactord4, WienerFactord4, _MM_SHUFFLE(2, 2, 0, 0));
@@ -246,7 +246,7 @@ void PatternFilter::ApplyPattern3D3_SSE() noexcept
 			for (int w = 0; w < outwidth; w = w + 2) // 
 			{
 				__m128 r1 = _mm_load_ps(outprev[w]);
-				__m128 pn4 = _mm_add_ps(r1, r2); //r,i,r,i
+				const __m128 pn4 = _mm_add_ps(r1, r2); //r,i,r,i
 				__m128 fc4 = _mm_add_ps(pn4, r3); //r,i,r,i
 
 				__m128 d4 = _mm_sub_ps(r1, r2); //r,i,r,i!
@@ -338,7 +338,7 @@ void PatternFilter::ApplyPattern3D3_degrid_SSE() noexcept
 				__m128 gridcorrection = _mm_mul_ps(gridfraction4, _mm_load_ps(gridsample[w])); //gridcorrection
 				gridcorrection = _mm_mul_ps(gridcorrection, _mm_set1_ps(3.0f));
 				__m128 r1 = _mm_load_ps(outprev[w]);
-				__m128 pn4 = _mm_add_ps(r1, r2); //r,i,r,i
+				const __m128 pn4 = _mm_add_ps(r1, r2); //r,i,r,i
 				__m128 fc4 = _mm_add_ps(pn4, r3); //r,i,r,i
 				fc4 = _mm_sub_ps(fc4, gridcorrection);
 
@@ -475,10 +475,10 @@ void PatternFilter::ApplyPattern3D4_SSE() noexcept
 				//t2: fpi1, fpi2, fni1, fni2
 				//t3: fcr1, fcr2, fp2r1, fp2r2
 				//t4: fci1, fci2, fp2i1, fp2i2
-				__m128 sh1 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
-				__m128 sh2 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
-				__m128 sh3 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
-				__m128 sh4 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m128 sh1 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m128 sh2 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m128 sh3 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m128 sh4 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
 
 				r1 = _mm_add_ps(sh1, sh2);
 				r2 = _mm_add_ps(sh3, sh4);
@@ -598,10 +598,10 @@ void PatternFilter::ApplyPattern3D4_degrid_SSE() noexcept
 				//t2: fpi1, fpi2, fni1, fni2
 				//t3: fcr1, fcr2, fp2r1, fp2r2
 				//t4: fci1, fci2, fp2i1, fp2i2
-				__m128 sh1 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
-				__m128 sh2 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
-				__m128 sh3 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
-				__m128 sh4 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m128 sh1 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m128 sh2 = _mm_shuffle_ps(r1, r2, _MM_SHUFFLE(3, 1, 3, 1));
+				const __m128 sh3 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(2, 0, 2, 0));
+				const __m128 sh4 = _mm_shuffle_ps(r3, r4, _MM_SHUFFLE(3, 1, 3, 1));
 
 				r1 = _mm_add_ps(sh1, sh2);
 				r2 = _mm_add_ps(sh3, sh4);
@@ -676,7 +676,7 @@ void PatternFilter::ApplyPattern3D5_SSE() noexcept
 			{
 				__m128 r1 = _mm_load_ps(outprev2[w]);
 				__m128 r2 = _mm_load_ps(outnext2[w]);
-				__m128 r5 = _mm_load_ps(outcur[w]);
+				const __m128 r5 = _mm_load_ps(outcur[w]);
 
 				__m128 r6 = _mm_add_ps(_mm_mul_ps(r1, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f)), r2); //sum, dif, sum, dif
 				__m128 r7 = _mm_add_ps(r3, _mm_mul_ps(r4, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
@@ -695,8 +695,8 @@ void PatternFilter::ApplyPattern3D5_SSE() noexcept
 				r7 = _mm_add_ps(r6, r7);
 				r7 = _mm_add_ps(r7, _mm_andnot_ps(_mm_set_ps(0.0f, ~0, 0.0f, ~0), r5));
 				r6 = _mm_shuffle_ps(r7, r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m128 fp2i = _mm_add_ps(r7, r6);
-				__m128 fn2i = _mm_sub_ps(r6, r7);
+				const __m128 fp2i = _mm_add_ps(r7, r6);
+				const __m128 fn2i = _mm_sub_ps(r6, r7);
 
 				r6 = _mm_add_ps(r1, _mm_mul_ps(r2, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
 				r7 = _mm_add_ps(r3, _mm_mul_ps(r4, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
@@ -715,8 +715,8 @@ void PatternFilter::ApplyPattern3D5_SSE() noexcept
 				r7 = _mm_add_ps(r6, r7);
 				r7 = _mm_add_ps(r7, _mm_andnot_ps(_mm_set_ps(0.0f, ~0, 0.0f, ~0), r5));
 				r6 = _mm_shuffle_ps(r7, r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m128 fpi = _mm_add_ps(r7, r6);
-				__m128 fni = _mm_sub_ps(r6, r7);
+				const __m128 fpi = _mm_add_ps(r7, r6);
+				const __m128 fni = _mm_sub_ps(r6, r7);
 
 				r6 = _mm_add_ps(r1, r2);
 				r7 = _mm_add_ps(r3, r4);
@@ -833,7 +833,7 @@ void PatternFilter::ApplyPattern3D5_degrid_SSE() noexcept
 				gridcorrection = _mm_mul_ps(gridcorrection, _mm_set1_ps(5));
 				__m128 r1 = _mm_load_ps(outprev2[w]);
 				__m128 r2 = _mm_load_ps(outnext2[w]);
-				__m128 r5 = _mm_load_ps(outcur[w]);
+				const __m128 r5 = _mm_load_ps(outcur[w]);
 
 				__m128 r6 = _mm_add_ps(_mm_mul_ps(r1, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f)), r2); //sum, dif, sum, dif
 				__m128 r7 = _mm_add_ps(r3, _mm_mul_ps(r4, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
@@ -852,8 +852,8 @@ void PatternFilter::ApplyPattern3D5_degrid_SSE() noexcept
 				r7 = _mm_add_ps(r6, r7);
 				r7 = _mm_add_ps(r7, _mm_andnot_ps(_mm_set_ps(0.0f, ~0, 0.0f, ~0), r5));
 				r6 = _mm_shuffle_ps(r7, r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m128 fp2i = _mm_add_ps(r7, r6);
-				__m128 fn2i = _mm_sub_ps(r6, r7);
+				const __m128 fp2i = _mm_add_ps(r7, r6);
+				const __m128 fn2i = _mm_sub_ps(r6, r7);
 
 				r6 = _mm_add_ps(r1, _mm_mul_ps(r2, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
 				r7 = _mm_add_ps(r3, _mm_mul_ps(r4, _mm_set_ps(-1.0f, 1.0f, -1.0f, 1.0f))); //sum, dif, sum, dif
@@ -872,8 +872,8 @@ void PatternFilter::ApplyPattern3D5_degrid_SSE() noexcept
 				r7 = _mm_add_ps(r6, r7);
 				r7 = _mm_add_ps(r7, _mm_andnot_ps(_mm_set_ps(0.0f, ~0, 0.0f, ~0), r5));
 				r6 = _mm_shuffle_ps(r7, r7, _MM_SHUFFLE(0, 3, 0, 1)); //dif, sum -> r6 == sum!
-				__m128 fpi = _mm_add_ps(r7, r6);
-				__m128 fni = _mm_sub_ps(r6, r7);
+				const __m128 fpi = _mm_add_ps(r7, r6);
+				const __m128 fni = _mm_sub_ps(r6, r7);
 
 				r6 = _mm_add_ps(r1, r2);
 				r7 = _mm_add_ps(r3, r4);
@@ -986,13 +986,13 @@ void FindPatternBlock_SSE(fftwf_complex *outcur0, int outwidth, int outpitch, in
 		{
 			outcur = outcur0 + nox * by*bh*outpitch + bx * bh*outpitch;
 			sigmaSquaredcur = 0;
-			float gcur = degrid * outcur[0][0] / gridsample[0][0]; // grid (windowing) correction factor
+			const float gcur = degrid * outcur[0][0] / gridsample[0][0]; // grid (windowing) correction factor
 			for (int h = 0; h < bh; h++)
 			{
 				for (int w = 0; w < outwidth; w = w + 2)
 				{
 					__m128 grid = _mm_load_ps(gridsample[w]);
-					__m128 cur = _mm_load_ps(outcur[w]);
+					const __m128 cur = _mm_load_ps(outcur[w]);
 					grid = _mm_mul_ps(grid, _mm_load1_ps(&gcur));
 					grid = _mm_sub_ps(cur, grid);
 					grid = _mm_mul_ps(grid, grid);

@@ -127,11 +127,3 @@ public:
 	fftwf_complex *outcur, *outprev2, *outprev, *outnext, *outnext2;
 	float sigmaSquaredNoiseNormed;
 };
-
-//Multithreaded versions
-//C functions for use with CreateThread
-DWORD WINAPI ApplyWiener2D_MT(LPVOID lpParam);
-DWORD WINAPI ApplyWiener3D2_MT(LPVOID lpParam);
-DWORD WINAPI ApplyWiener3D3_MT(LPVOID lpParam);
-DWORD WINAPI ApplyWiener3D4_MT(LPVOID lpParam);
-DWORD WINAPI ApplyWiener3D5_MT(LPVOID lpParam);

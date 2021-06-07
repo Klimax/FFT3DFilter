@@ -44,17 +44,17 @@ void SharpenFilter::Sharpen_AVX512() noexcept
 			{
 				for (int w = 0; w < outwidth8; w = w + 8)
 				{
-					__m512 cur = _mm512_load_ps(outcur[w]);
-					__m512 r1 = _mm512_mul_ps(cur, cur);
+					const __m512 cur = _mm512_load_ps(outcur[w]);
+					const __m512 r1 = _mm512_mul_ps(cur, cur);
 					__m512 r2 = _mm512_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
-					__m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
+					const __m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
 
 					__m512 sharp8 = _mm512_castps256_ps512(_mm256_load_ps(&wsharpen[w]));
 					sharp8 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0), sharp8);
 					r2 = _mm512_mul_ps(sharpen8, sharp8);
 					__m512 r3 = _mm512_mul_ps(psd8, sigmaSquaredSharpenMax8);
 					__m512 r4 = _mm512_add_ps(psd8, sigmaSquaredSharpenMin8);
-					__m512 r5 = _mm512_add_ps(psd8, sigmaSquaredSharpenMax8);
+					const __m512 r5 = _mm512_add_ps(psd8, sigmaSquaredSharpenMax8);
 					r4 = _mm512_mul_ps(r4, r5);
 					r3 = _mm512_div_ps(r3, r4);
 					r3 = _mm512_sqrt_ps(r3);
@@ -83,10 +83,10 @@ void SharpenFilter::Sharpen_AVX512() noexcept
 			{
 				for (int w = 0; w < outwidth8; w = w + 8)
 				{
-					__m512 cur = _mm512_load_ps(outcur[w]);
-					__m512 r1 = _mm512_mul_ps(cur, cur);
+					const __m512 cur = _mm512_load_ps(outcur[w]);
+					const __m512 r1 = _mm512_mul_ps(cur, cur);
 					__m512 r2 = _mm512_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
-					__m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
+					const __m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
 
 					__m512 wdehalo8 = _mm512_castps256_ps512(_mm256_load_ps(&wdehalo[w]));
 					wdehalo8 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0), wdehalo8);
@@ -123,17 +123,17 @@ void SharpenFilter::Sharpen_AVX512() noexcept
 			{
 				for (int w = 0; w < outwidth8; w = w + 8)
 				{
-					__m512 cur = _mm512_load_ps(outcur[w]);
-					__m512 r1 = _mm512_mul_ps(cur, cur);
+					const __m512 cur = _mm512_load_ps(outcur[w]);
+					const __m512 r1 = _mm512_mul_ps(cur, cur);
 					__m512 r2 = _mm512_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
-					__m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
+					const __m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
 
 					__m512 sharp8 = _mm512_castps256_ps512(_mm256_load_ps(&wsharpen[w]));
 					sharp8 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0), sharp8);
 					r2 = _mm512_mul_ps(sharpen8, sharp8);
 					__m512 r3 = _mm512_mul_ps(psd8, sigmaSquaredSharpenMax8);
 					__m512 r4 = _mm512_add_ps(psd8, sigmaSquaredSharpenMin8);
-					__m512 r5 = _mm512_add_ps(psd8, sigmaSquaredSharpenMax8);
+					const __m512 r5 = _mm512_add_ps(psd8, sigmaSquaredSharpenMax8);
 					r4 = _mm512_mul_ps(r4, r5);
 					r3 = _mm512_div_ps(r3, r4);
 					r3 = _mm512_sqrt_ps(r3);
@@ -188,16 +188,16 @@ void SharpenFilter::Sharpen_degrid_AVX512() noexcept
 					const __m512 gridcorrection = _mm512_mul_ps(gridfraction8, _mm512_load_ps(gridsample[w])); //gridcorrection
 					__m512 cur = _mm512_load_ps(outcur[w]);
 					cur = _mm512_sub_ps(cur, gridcorrection);
-					__m512 r1 = _mm512_mul_ps(cur, cur);
+					const __m512 r1 = _mm512_mul_ps(cur, cur);
 					__m512 r2 = _mm512_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
-					__m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
+					const __m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
 
 					__m512 sharp8 = _mm512_castps256_ps512(_mm256_load_ps(&wsharpen[w]));
 					sharp8 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0), sharp8);
 					r2 = _mm512_mul_ps(sharpen8, sharp8);
 					__m512 r3 = _mm512_mul_ps(psd8, sigmaSquaredSharpenMax8);
 					__m512 r4 = _mm512_add_ps(psd8, sigmaSquaredSharpenMin8);
-					__m512 r5 = _mm512_add_ps(psd8, sigmaSquaredSharpenMax8);
+					const __m512 r5 = _mm512_add_ps(psd8, sigmaSquaredSharpenMax8);
 					r4 = _mm512_mul_ps(r4, r5);
 					r3 = _mm512_div_ps(r3, r4);
 					r3 = _mm512_sqrt_ps(r3);
@@ -234,9 +234,9 @@ void SharpenFilter::Sharpen_degrid_AVX512() noexcept
 					const __m512 gridcorrection = _mm512_mul_ps(gridfraction8, _mm512_load_ps(gridsample[w])); //gridcorrection
 					__m512 cur = _mm512_load_ps(outcur[w]);
 					cur = _mm512_sub_ps(cur, gridcorrection);
-					__m512 r1 = _mm512_mul_ps(cur, cur);
+					const __m512 r1 = _mm512_mul_ps(cur, cur);
 					__m512 r2 = _mm512_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
-					__m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
+					const __m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
 
 					__m512 wdehalo8 = _mm512_castps256_ps512(_mm256_load_ps(&wdehalo[w]));
 					wdehalo8 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0), wdehalo8);
@@ -281,16 +281,16 @@ void SharpenFilter::Sharpen_degrid_AVX512() noexcept
 					const __m512 gridcorrection = _mm512_mul_ps(gridfraction8, _mm512_load_ps(gridsample[w])); //gridcorrection
 					__m512 cur = _mm512_load_ps(outcur[w]);
 					cur = _mm512_sub_ps(cur, gridcorrection);
-					__m512 r1 = _mm512_mul_ps(cur, cur);
+					const __m512 r1 = _mm512_mul_ps(cur, cur);
 					__m512 r2 = _mm512_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 3, 0, 1));
-					__m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
+					const __m512 psd8 = _mm512_add_ps(r1, r2); //psd1, -, psd2, -
 
 					__m512 sharp8 = _mm512_castps256_ps512(_mm256_load_ps(&wsharpen[w]));
 					sharp8 = _mm512_permutexvar_ps(_mm512_set_epi32(7, 7, 6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0), sharp8);
 					r2 = _mm512_mul_ps(sharpen8, sharp8);
 					__m512 r3 = _mm512_mul_ps(psd8, sigmaSquaredSharpenMax8);
 					__m512 r4 = _mm512_add_ps(psd8, sigmaSquaredSharpenMin8);
-					__m512 r5 = _mm512_add_ps(psd8, sigmaSquaredSharpenMax8);
+					const __m512 r5 = _mm512_add_ps(psd8, sigmaSquaredSharpenMax8);
 					r4 = _mm512_mul_ps(r4, r5);
 					r3 = _mm512_div_ps(r3, r4);
 					r3 = _mm512_sqrt_ps(r3);

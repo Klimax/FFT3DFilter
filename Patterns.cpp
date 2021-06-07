@@ -45,15 +45,15 @@ void SigmasToPattern(float sigma, float sigma2, float sigma3, float sigma4, int 
 {
 	// it is not fast, but called only in constructor
 	float sigmacur(0.0f);
-	float ft2 = sqrt(0.5f) / 2; // frequency for sigma2
-	float ft3 = sqrt(0.5f) / 4; // frequency for sigma3
+	const float ft2 = sqrt(0.5f) / 2; // frequency for sigma2
+	const float ft3 = sqrt(0.5f) / 4; // frequency for sigma3
 	for (int h = 0; h < bh; h++)
 	{
 		for (int w = 0; w < outwidth; w++)
 		{
-			float fy = (bh - 2.0f*abs(h - bh / 2)) / bh; // normalized to 1
-			float fx = (w*1.0f) / outwidth;  // normalized to 1
-			float f = sqrt((fx*fx + fy * fy)*0.5f); // normalized to 1
+			const float fy = (bh - 2.0f*abs(h - bh / 2)) / bh; // normalized to 1
+			const float fx = (w*1.0f) / outwidth;  // normalized to 1
+			const float f = sqrt((fx*fx + fy * fy)*0.5f); // normalized to 1
 			if (f < ft3)
 			{ // low frequencies
 				sigmacur = sigma4 + (sigma3 - sigma4)*f / ft3;
@@ -99,8 +99,8 @@ void SetPattern(fftwf_complex *outcur, int outwidth, int outpitch, int bh, int n
 void PutPatternOnly(fftwf_complex *outcur, int outwidth, int outpitch, int bh, int nox, int noy, int px, int py) noexcept
 {
 	int w(0), block(0);
-	int pblock = py * nox + px;
-	int blocks = nox * noy;
+	const int pblock = py * nox + px;
+	const int blocks = nox * noy;
 
 	for (block = 0; block < pblock; block++)
 	{
