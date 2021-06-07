@@ -82,14 +82,15 @@ void FilterContainer::ApplyWiener3D4(fftwf_complex *out, fftwf_complex *outprev2
 		WienerFilters[i].outnext = i * thread_offset + outnext;
 		WienerFilters[i].sigmaSquaredNoiseNormed = sigmaSquaredNoiseNormed;
 
-		auto thread = std::thread(WienerFilters[i].ApplyWiener3D4, WienerFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(WienerFilters[i].ApplyWiener3D4, WienerFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
 
 	handles.clear();
+	threads.clear();
 }
 
 void FilterContainer::ApplyWiener3D3(fftwf_complex *out, fftwf_complex *outprev, fftwf_complex *outnext, float sigmaSquaredNoiseNormed)
@@ -100,14 +101,16 @@ void FilterContainer::ApplyWiener3D3(fftwf_complex *out, fftwf_complex *outprev,
 		WienerFilters[i].outnext = i * thread_offset + outnext;
 		WienerFilters[i].sigmaSquaredNoiseNormed = sigmaSquaredNoiseNormed;
 
-		auto thread = std::thread(WienerFilters[i].ApplyWiener3D3, WienerFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(WienerFilters[i].ApplyWiener3D3, WienerFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }
 
 void FilterContainer::ApplyWiener3D2(fftwf_complex *out, fftwf_complex *outprev, float sigmaSquaredNoiseNormed)
@@ -117,14 +120,16 @@ void FilterContainer::ApplyWiener3D2(fftwf_complex *out, fftwf_complex *outprev,
 		WienerFilters[i].outprev = i * thread_offset + outprev;
 		WienerFilters[i].sigmaSquaredNoiseNormed = sigmaSquaredNoiseNormed;
 
-		auto thread = std::thread(WienerFilters[i].ApplyWiener3D2, WienerFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(WienerFilters[i].ApplyWiener3D2, WienerFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }
 
 void FilterContainer::ApplyWiener2D(fftwf_complex *out, float sigmaSquaredNoiseNormed)
@@ -133,14 +138,16 @@ void FilterContainer::ApplyWiener2D(fftwf_complex *out, float sigmaSquaredNoiseN
 		WienerFilters[i].outcur = i * thread_offset + out;
 		WienerFilters[i].sigmaSquaredNoiseNormed = sigmaSquaredNoiseNormed;
 
-		auto thread = std::thread(WienerFilters[i].ApplyWiener2D, WienerFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(WienerFilters[i].ApplyWiener2D, WienerFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }
 
 void FilterContainer::ApplyWiener3D5(fftwf_complex *out, fftwf_complex *outprev2, fftwf_complex *outprev, fftwf_complex *outnext, fftwf_complex *outnext2, float sigmaSquaredNoiseNormed)
@@ -153,14 +160,16 @@ void FilterContainer::ApplyWiener3D5(fftwf_complex *out, fftwf_complex *outprev2
 		WienerFilters[i].outnext2 = i * thread_offset + outnext2;
 		WienerFilters[i].sigmaSquaredNoiseNormed = sigmaSquaredNoiseNormed;
 
-		auto thread = std::thread(WienerFilters[i].ApplyWiener3D5, WienerFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(WienerFilters[i].ApplyWiener3D5, WienerFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }
 
 //Patterns
@@ -173,14 +182,16 @@ void FilterContainer::ApplyPattern3D4(fftwf_complex *out, fftwf_complex *outprev
 		PatternFilters[i].outnext = i * thread_offset + outnext;
 		PatternFilters[i].pattern3d = pattern3d;
 
-		auto thread = std::thread(PatternFilters[i].ApplyPattern3D4, PatternFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(PatternFilters[i].ApplyPattern3D4, PatternFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }
 
 void FilterContainer::ApplyPattern3D3(fftwf_complex *out, fftwf_complex *outprev, fftwf_complex *outnext, float* pattern3d)
@@ -191,14 +202,16 @@ void FilterContainer::ApplyPattern3D3(fftwf_complex *out, fftwf_complex *outprev
 		PatternFilters[i].outnext = i * thread_offset + outnext;
 		PatternFilters[i].pattern3d = pattern3d;
 
-		auto thread = std::thread(PatternFilters[i].ApplyPattern3D3, PatternFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(PatternFilters[i].ApplyPattern3D3, PatternFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }
 
 void FilterContainer::ApplyPattern3D2(fftwf_complex *out, fftwf_complex *outprev, float* pattern3d)
@@ -208,14 +221,16 @@ void FilterContainer::ApplyPattern3D2(fftwf_complex *out, fftwf_complex *outprev
 		PatternFilters[i].outprev = i * thread_offset + outprev;
 		PatternFilters[i].pattern3d = pattern3d;
 
-		auto thread = std::thread(PatternFilters[i].ApplyPattern3D2, PatternFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(PatternFilters[i].ApplyPattern3D2, PatternFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }
 
 void FilterContainer::ApplyPattern2D(fftwf_complex *outcur, float pfactor, float* pattern3d)
@@ -225,14 +240,16 @@ void FilterContainer::ApplyPattern2D(fftwf_complex *outcur, float pfactor, float
 		PatternFilters[i].pfactor = pfactor;
 		PatternFilters[i].pattern3d = pattern3d;
 
-		auto thread = std::thread(PatternFilters[i].ApplyPattern2D, PatternFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(PatternFilters[i].ApplyPattern2D, PatternFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }
 
 void FilterContainer::ApplyPattern3D5(fftwf_complex *out, fftwf_complex *outprev2, fftwf_complex *outprev, fftwf_complex *outnext, fftwf_complex *outnext2, float* pattern3d)
@@ -245,14 +262,16 @@ void FilterContainer::ApplyPattern3D5(fftwf_complex *out, fftwf_complex *outprev
 		PatternFilters[i].outnext2 = i * thread_offset + outnext2;
 		PatternFilters[i].pattern3d = pattern3d;
 
-		auto thread = std::thread(PatternFilters[i].ApplyPattern3D5, PatternFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(PatternFilters[i].ApplyPattern3D5, PatternFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }
 
 void FilterContainer::Sharpen(fftwf_complex *out)
@@ -260,14 +279,16 @@ void FilterContainer::Sharpen(fftwf_complex *out)
 	for (unsigned int i = 0; i < SharpenFilters.size(); i++) {
 		SharpenFilters[i].outcur = i * thread_offset + out;
 
-		auto thread = std::thread(SharpenFilters[i].Sharpen, SharpenFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(SharpenFilters[i].Sharpen, SharpenFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }
 
 void FilterContainer::ApplyKalman(fftwf_complex *outcur, fftwf_complex *outLast, float covarNoiseNormed)
@@ -277,14 +298,16 @@ void FilterContainer::ApplyKalman(fftwf_complex *outcur, fftwf_complex *outLast,
 		KalmanFilters[i].outLast = i * thread_offset + outLast;
 		KalmanFilters[i].covarNoiseNormed = covarNoiseNormed;
 
-		auto thread = std::thread(KalmanFilters[i].ApplyKalman, KalmanFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(KalmanFilters[i].ApplyKalman, KalmanFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }
 
 void FilterContainer::ApplyKalmanPattern(fftwf_complex *outcur, fftwf_complex *outLast, float *covarNoiseNormed)
@@ -294,12 +317,14 @@ void FilterContainer::ApplyKalmanPattern(fftwf_complex *outcur, fftwf_complex *o
 		KalmanFilters[i].outLast = i * thread_offset + outLast;
 		KalmanFilters[i].covarNoiseNormed2 = covarNoiseNormed;
 
-		auto thread = std::thread(KalmanFilters[i].ApplyKalmanPattern, KalmanFilters[i]);
-		handles.emplace_back(thread.native_handle());
-		thread.detach();
+		threads.emplace_back(std::thread(KalmanFilters[i].ApplyKalmanPattern, KalmanFilters[i]));
+		handles.emplace_back(threads.back().native_handle());
 	}
 
 	WaitForMultipleObjects(handles.size(), handles.data(), true, INFINITE);
 
+	for (unsigned int i = 0; i < threads.size(); i++) { threads[i].join(); }
+
 	handles.clear();
+	threads.clear();
 }

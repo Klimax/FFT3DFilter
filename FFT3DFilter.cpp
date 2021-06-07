@@ -79,9 +79,9 @@
 					upgraded to MSVC 2017, corrected error message, added support for env variable, measurment code for performance testing, AVX 512 support
 					note: ApplyKalmanPattern is broken - unknown casue
 					Massive refactoring
-	Version 3.0.1 - Limited to C++17, because avisynth.h has some problems under c++20 compilation
-        Version 3.1 - 2021 - Changed to VS 2019, threads are created using std::thread and thus trampolines are removed,
-                           -sanity checking on multithreading and ncpu parameter versus number of threads of current CPU
+    Version 3.0.1 - Limited to C++17, because avisynth.h has some problems under c++20 compilation
+	Version 3.1 - 2021 - Changed to VS 2019, threads are created using std::thread and thus trampolines are removed,
+			           -sanity checking on multithreading and ncpu parameter versus number of threads of current CPU
 */
 
 #include "fft3dfilter.h"
@@ -283,7 +283,7 @@ FFT3DFilter::FFT3DFilter(PClip _child, float _sigma, float _beta, int _plane, in
 		planFlags = FFTW_MEASURE;
 #else
 	if (measure)
-		planFlags = FFTW_PATIENT | FFTW_DESTROY_INPUT;
+		planFlags = FFTW_MEASURE | FFTW_DESTROY_INPUT;
 #endif
 	const int rank = 2; // 2d
 	ndim[0] = bh; // size of block along height

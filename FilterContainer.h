@@ -43,6 +43,7 @@ public:
 	std::vector<PatternFilter> PatternFilters;
 	std::vector<SharpenFilter> SharpenFilters;
 	std::vector<KalmanFilter> KalmanFilters;
+	std::vector<std::thread> threads;
 	std::vector<HANDLE> handles;
 	int thread_offset = 0;
 
