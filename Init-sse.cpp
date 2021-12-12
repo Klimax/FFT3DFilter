@@ -21,6 +21,7 @@
 #include "fft3dfilter.h"
 #include <intrin.h>
 
+#ifndef SSE2BUILD
 void FFT3DFilter::InitOverlapPlane_SSE(float *__restrict inp0, const BYTE *__restrict srcp0) noexcept
 {
 	int w(0);
@@ -176,8 +177,7 @@ void FFT3DFilter::InitOverlapPlane_SSE(float *__restrict inp0, const BYTE *__res
 			}
 			for (w = ow; w < bw - ow; w++)   // first half line of first block
 			{
-				const float ftmp = float((srcp[w] - planeBase));
-				inp[w] = ftmp;   // Copy each byte from source to float array
+				inp[w] = float((srcp[w] - planeBase));;   // Copy each byte from source to float array
 			}
 			inp += bw - ow;
 			srcp += bw - ow;
@@ -202,8 +202,7 @@ void FFT3DFilter::InitOverlapPlane_SSE(float *__restrict inp0, const BYTE *__res
 			}
 			for (w = 0; w < ow; w++)   // last half line of last block
 			{
-				const float ftmp = float(wanxr[w] * (srcp[w] - planeBase));// Copy each byte from source to float array
-				inp[w] = ftmp;
+				inp[w] = float(wanxr[w] * (srcp[w] - planeBase));// Copy each byte from source to float array
 			}
 			inp += ow;
 			srcp += ow;
@@ -220,13 +219,11 @@ void FFT3DFilter::InitOverlapPlane_SSE(float *__restrict inp0, const BYTE *__res
 			inp = inp0 + (ihy - 1)*(yoffset + (bh - oh)*bw) + (bh - oh)*bw + h * bw;
 			for (w = 0; w < ow; w++)   // first half line of first block
 			{
-				const float ftmp = float(wanxl[w] * wanyr[h] * (srcp[w] - planeBase));
-				inp[w] = ftmp;   // Copy each byte from source to float array
+				inp[w] = float(wanxl[w] * wanyr[h] * (srcp[w] - planeBase));   // Copy each byte from source to float array
 			}
 			for (w = ow; w < bw - ow; w++)   // first half line of first block
 			{
-				const float ftmp = float(wanyr[h] * (srcp[w] - planeBase));
-				inp[w] = ftmp;   // Copy each byte from source to float array
+				inp[w] = float(wanyr[h] * (srcp[w] - planeBase));;   // Copy each byte from source to float array
 			}
 			inp += bw - ow;
 			srcp += bw - ow;
@@ -250,8 +247,7 @@ void FFT3DFilter::InitOverlapPlane_SSE(float *__restrict inp0, const BYTE *__res
 			}
 			for (w = 0; w < ow; w++)   // last half line of last block
 			{
-				const float ftmp = float(wanxr[w] * wanyr[h] * (srcp[w] - planeBase));
-				inp[w] = ftmp;   // Copy each byte from source to float array
+				inp[w] = float(wanxr[w] * wanyr[h] * (srcp[w] - planeBase));;   // Copy each byte from source to float array
 			}
 			inp += ow;
 			srcp += ow;
@@ -503,8 +499,7 @@ void FFT3DFilter::InitOverlapPlane_wt2_SSE(float *__restrict inp0, const BYTE *_
 				srcp += ow;
 				for (w = 0; w < d2bwow; w++)   // half non-overlapped line of block
 				{
-					const float ftmp = float((srcp[w] - planeBase));   // Copy each byte from source to float array
-					inp[w] = ftmp;
+					inp[w] = float((srcp[w] - planeBase));   // Copy each byte from source to float array
 				}
 				inp += d2bwow;
 				srcp += d2bwow;
@@ -528,7 +523,7 @@ void FFT3DFilter::InitOverlapPlane_wt2_SSE(float *__restrict inp0, const BYTE *_
 
 	}
 
-	int ihy = noy; // last bottom  part
+	const int ihy = noy; // last bottom  part
 	{
 		for (int h = 0; h < oh; h++)
 		{
@@ -594,3 +589,4 @@ void FFT3DFilter::InitOverlapPlane_wt2_SSE(float *__restrict inp0, const BYTE *_
 		}
 	}
 }
+#endif

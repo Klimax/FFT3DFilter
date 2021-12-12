@@ -11,6 +11,8 @@
 #include "DebugDump.h"
 #endif
 
+#include <unordered_set>
+
 //Conversion functions
 void PlanarPlaneToCovebuf(const BYTE *srcp, int src_width, int src_height, int src_pitch, BYTE *coverbuf, int coverwidth, int coverheight, int coverpitch, int mirw, int mirh, bool interlaced, IScriptEnvironment* env) noexcept;
 void CoverbufToPlanarPlane(const BYTE *coverbuf, int coverpitch, BYTE *dstp, int dst_width, int dst_height, int dst_pitch, int mirw, int mirh, bool interlaced, IScriptEnvironment* env) noexcept;
@@ -156,6 +158,7 @@ class FFT3DFilter : public GenericVideoFilter {
 	fftwf_plan_with_nthreads_proc fftwf_plan_with_nthreads;
 
 	int CPUFlags;
+	std::unordered_set<std::string> CPUFeatures;
 
 	fftwf_complex ** cachefft; //v1.8
 	int * cachewhat;//v1.8
@@ -196,6 +199,7 @@ class FFT3DFilter : public GenericVideoFilter {
 
 	void InitFunctors();
 	void DetectFeatures(IScriptEnvironment* env);
+	void DetectFeatures();
 	void GenWindows() noexcept;
 
 public:

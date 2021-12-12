@@ -74,7 +74,8 @@
 	Version 2.0.0 - november 6, 2006 - added motion compensation mc parameter, window reorganized, multi-cpu
 	Version 2.1.0 - January 17, 2007 - removed motion compensation mc parameter
 	Version 2.1.1 - February 19, 2007 - fixed bug with bw not mod 4 (restored v1.9.2 window method)
-	Klimax edition:
+	
+	Klimax version:
 	Version 3.0.0 - 2017 - MultiThreading support, revectorised, Avisynth 2.6 header and support, new vectorisations,
 					upgraded to MSVC 2017, corrected error message, added support for env variable, measurment code for performance testing, AVX 512 support
 					note: ApplyKalmanPattern is broken - unknown casue
@@ -82,6 +83,7 @@
     Version 3.0.1 - Limited to C++17, because avisynth.h has some problems under c++20 compilation
 	Version 3.1 - 2021 - Changed to VS 2019, threads are created using std::thread and thus trampolines are removed,
 			           -sanity checking on multithreading and ncpu parameter versus number of threads of current CPU
+	Version 3.1.1 - 2021 December - Compiler updated and small code maintance (no effect on codegen.
 */
 
 #include "fft3dfilter.h"
@@ -90,6 +92,7 @@
 #include <utility>
 #include <vector>
 #include <string>
+#include <bitset>
 
 #ifdef MEASURING
 #define MEASURMENT(function,...) \
@@ -285,11 +288,11 @@ FFT3DFilter::FFT3DFilter(PClip _child, float _sigma, float _beta, int _plane, in
 	if (measure)
 		planFlags = FFTW_MEASURE | FFTW_DESTROY_INPUT;
 #endif
-	const int rank = 2; // 2d
+	constexpr int rank = 2; // 2d
 	ndim[0] = bh; // size of block along height
 	ndim[1] = bw; // size of block along width
-	const int istride = 1;
-	const int ostride = 1;
+	constexpr int istride = 1;
+	constexpr int ostride = 1;
 	const int idist = bw * bh;
 	const int odist = outpitch * bh;//  v1.7 (was outwidth)
 	inembed[0] = bh;
@@ -530,6 +533,108 @@ void FFT3DFilter::DetectFeatures(IScriptEnvironment* env)
 		break;
 	}
 	CPUFlags = NewCPUFlags;
+
+#ifdef MEASURING
+	instrumentation.SetMaxinstruction(MaxFeatures);
+#endif
+}
+
+void FFT3DFilter::DetectFeatures()
+{
+	std::vector<wchar_t> TempBuffer;
+	std::wstring TempString;
+
+	TempBuffer.resize(32747, 0);
+	TempString.clear();
+	int NewCPUFlags(0);
+	int MaxFeatures(CPUK_AVX512);
+	const auto retsize = GetEnvironmentVariable(L"FFT3DFilter", TempBuffer.data(), TempBuffer.size());
+	if (retsize > 0 && retsize < 11) {
+
+		TempString.assign(TempBuffer.data(), retsize);
+		MaxFeatures = std::stoul(TempString);
+	}
+
+	int cpuInfo[4];
+	std::bitset<32> EAX;
+	std::bitset<32> EBX;
+	std::bitset<32> ECX;
+	std::bitset<32> EDX;
+
+	__cpuidex(cpuInfo, 0, 0);
+	int MaxEAX = cpuInfo[0];
+
+	__cpuid(cpuInfo, 0x80000000);
+	int MaxExtendedEAX = cpuInfo[0];
+
+	if (MaxEAX >= 7)
+	{
+		__cpuidex(cpuInfo, 7, 0);
+		EAX = cpuInfo[0];
+		EBX = cpuInfo[1];
+		ECX = cpuInfo[2];
+		EDX = cpuInfo[3];
+
+		if (EDX[3])
+		{
+			CPUFeatures.emplace("AVX5124FMAPS");
+		}
+
+		if (EBX[31])
+		{
+			CPUFeatures.emplace("AVX512VL");
+		}
+
+		if (EBX[30])
+		{
+			CPUFeatures.emplace("AVX512BW");
+		}
+
+		if (EBX[16])
+		{
+			CPUFeatures.emplace("AVX512");
+		}
+
+		if (EBX[5])
+		{
+			CPUFeatures.emplace("AVX2");
+		}
+	}
+
+	__cpuid(cpuInfo, 1);
+	EAX = cpuInfo[0];
+	EBX = cpuInfo[1];
+	ECX = cpuInfo[2];
+	EDX = cpuInfo[3];
+
+	if (ECX[28])
+	{
+		CPUFeatures.emplace("AVX");
+	}
+
+	if (ECX[19])
+	{
+		CPUFeatures.emplace("SSE41");
+	}
+
+	if (ECX[0])
+	{
+		CPUFeatures.emplace("SSE3");
+	}
+
+	if (EDX[26])
+	{
+		CPUFeatures.emplace("SSE2");
+	}
+
+	if (EDX[25])
+	{
+		CPUFeatures.emplace("SSE");
+	}
+
+#if _M_IX86
+	CPUFeatures.emplace("x86");
+#endif
 
 #ifdef MEASURING
 	instrumentation.SetMaxinstruction(MaxFeatures);

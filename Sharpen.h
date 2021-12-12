@@ -49,7 +49,7 @@ private:
 	void Sharpen_degrid_C() noexcept;
 
 public:
-	SharpenFilter::SharpenFilter(int start_block, int blocks, int CPUFlags, int outwidth, int outpitch, int bh, fftwf_complex *gridsample,
+	SharpenFilter(int start_block, int blocks, int CPUFlags, int outwidth, int outpitch, int bh, fftwf_complex *gridsample,
 		float sharpen, float sigmaSquaredSharpenMin, float sigmaSquaredSharpenMax, float *wsharpen, float dehalo, float *wdehalo, float ht2n, float degrid);
 
 	std::function<void(class SharpenFilter&)> Sharpen;

@@ -32,15 +32,7 @@ void Instrumentation::AddInstance(std::string function, LONGLONG start, LONGLONG
 {
 	const auto frame = --(data.end());
 
-	FrameInstanceData temp;
-	temp.function = function;
-	temp.start = start;
-	temp.end = end;
-	temp.delta = (end - start) / frequency;
-
-	header htemp;
-	htemp.function = function;
-	htemp.instances = 1;
+	header htemp = { function, 1 };
 
 	auto funcit = frame->headers.find(function);
 	if (funcit == frame->headers.end()) { funcit = frame->headers.insert(std::make_pair(function, htemp)).first; }
@@ -60,8 +52,9 @@ void Instrumentation::AddInstance(std::string function, LONGLONG start, LONGLONG
 			headers_output.push_back(function);
 		}
 	}
-	temp.funcinst = funcit->second.instances;
-	frame->framedata.push_back(temp);
+
+	const FrameInstanceData instancedata = { function, funcit->second.instances,start,end, (end - start) / frequency };
+	frame->framedata.emplace_back(instancedata);
 }
 
 void Instrumentation::SaveData()

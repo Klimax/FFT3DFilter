@@ -32,13 +32,7 @@ typedef float fftwf_complex[2];
 
 class FilterContainer
 {
-public:
-	FilterContainer() = default;
-	FilterContainer(int howmanyblocks, int ncpu, int CPUFlags, int outwidth, int outpitch, int bh, float degrid, float beta, fftwf_complex* gridsample, float sharpen, float sigmaSquaredSharpenMin, float sigmaSquaredSharpenMax, float *wsharpen, float dehalo, float *wdehalo, float ht2n, fftwf_complex *covar, fftwf_complex *covarProcess, float kratio2);
-	~FilterContainer() = default;
-
-	void Init(int howmanyblocks, int ncpu, int CPUFlags, int outwidth, int outpitch, int bh, float degrid, float beta, fftwf_complex* gridsample, float sharpen, float sigmaSquaredSharpenMin, float sigmaSquaredSharpenMax, float *wsharpen, float dehalo, float *wdehalo, float ht2n, fftwf_complex *covar, fftwf_complex *covarProcess, float kratio2);
-
+private:
 	std::vector<WienerFilter> WienerFilters;
 	std::vector<PatternFilter> PatternFilters;
 	std::vector<SharpenFilter> SharpenFilters;
@@ -46,6 +40,13 @@ public:
 	std::vector<std::thread> threads;
 	std::vector<HANDLE> handles;
 	int thread_offset = 0;
+
+public:
+	FilterContainer() = default;
+	FilterContainer(int howmanyblocks, int ncpu, int CPUFlags, int outwidth, int outpitch, int bh, float degrid, float beta, fftwf_complex* gridsample, float sharpen, float sigmaSquaredSharpenMin, float sigmaSquaredSharpenMax, float *wsharpen, float dehalo, float *wdehalo, float ht2n, fftwf_complex *covar, fftwf_complex *covarProcess, float kratio2);
+	~FilterContainer() = default;
+
+	void Init(int howmanyblocks, int ncpu, int CPUFlags, int outwidth, int outpitch, int bh, float degrid, float beta, fftwf_complex* gridsample, float sharpen, float sigmaSquaredSharpenMin, float sigmaSquaredSharpenMax, float *wsharpen, float dehalo, float *wdehalo, float ht2n, fftwf_complex *covar, fftwf_complex *covarProcess, float kratio2);
 
 	void ApplyWiener2D(fftwf_complex *outcur, float sigmaSquaredNoiseNormed);
 	void ApplyWiener3D2(fftwf_complex *outcur, fftwf_complex *outprev, float sigmaSquaredNoiseNormed);
@@ -64,4 +65,3 @@ public:
 	void ApplyKalman(fftwf_complex *outcur, fftwf_complex *outLast, float covarNoiseNormed);
 	void ApplyKalmanPattern(fftwf_complex *outcur, fftwf_complex *outLast, float *covarNoiseNormed);
 };
-

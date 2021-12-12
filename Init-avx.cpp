@@ -447,7 +447,7 @@ void FFT3DFilter::InitOverlapPlane_AVX(float *__restrict inp0, const BYTE *__res
 
 	}
 
-	int ihy = noy; // last bottom  part
+	const int ihy = noy; // last bottom  part
 	{
 		for (int h = 0; h < oh; h++)
 		{

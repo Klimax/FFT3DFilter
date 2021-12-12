@@ -449,7 +449,7 @@ void FFT3DFilter::InitOverlapPlane_SSSE3(float *__restrict inp0, const BYTE *__r
 
 	}
 
-	int ihy = noy; // last bottom  part
+	const int ihy = noy; // last bottom  part
 	{
 		for (int h = 0; h < oh; h++)
 		{

@@ -30,7 +30,7 @@ void FindPatternBlock_SSE3(fftwf_complex *outcur0, int outwidth, int outpitch, i
 void FindPatternBlock_AVX(fftwf_complex *outcur0, int outwidth, int outpitch, int bh, int nox, int noy, int &px, int &py, float *pwin, float degrid, fftwf_complex *gridsample) noexcept;
 void FindPatternBlock_AVX2(fftwf_complex *outcur0, int outwidth, int outpitch, int bh, int nox, int noy, int &px, int &py, float *pwin, float degrid, fftwf_complex *gridsample) noexcept;
 
-void SetPattern_C(fftwf_complex *outcur, int outwidth, int outpitch, int bh, int nox, int px, int py, float *pwin, float *pattern2d, float &psigma, float degrid, fftwf_complex *gridsample);
+void SetPattern_C(fftwf_complex *outcur, int outwidth, int outpitch, int bh, int nox, int px, int py, float *pwin, float *pattern2d, float &psigma, float degrid, fftwf_complex *gridsample) noexcept;
 
 void fill_complex(fftwf_complex *plane, int outsize, float realvalue, float imgvalue) noexcept
 {
